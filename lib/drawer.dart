@@ -1,0 +1,146 @@
+import 'package:flutter/material.dart';
+
+class NavDrawer extends StatefulWidget {
+  Function onTileTap;
+
+  NavDrawer({Key? key, required this.onTileTap}) : super(key: key);
+
+  static final itemText = [
+    "Вход",
+    "Регистрация",
+    "Профиль",
+    "Moodle",
+    "BRS",
+    "Карта",
+    "Расписание",
+    "Календарь",
+    "Ассистент",
+    "Чаты",
+    "Настройки"
+  ];
+
+  static final itemIcon = [
+    Image.asset("assets/menu_items/LogIn.png", height: 40),
+    Image.asset("assets/menu_items/Signup.png", height: 40),
+    Image.asset("assets/menu_items/Profile.png", height: 40),
+    Image.asset("assets/menu_items/Moodle.png", height: 40),
+    Image.asset("assets/menu_items/BRS.png", height: 40),
+    Image.asset("assets/menu_items/Map.png", height: 40),
+    Image.asset("assets/menu_items/Schedule.png", height: 40),
+    Image.asset("assets/menu_items/Calendar.png", height: 40),
+    Image.asset("assets/menu_items/AI.png", height: 40),
+    Image.asset("assets/menu_items/Chat.png", height: 40),
+    Image.asset("assets/menu_items/Settings.png", height: 40),
+  ];
+
+  @override
+  State<NavDrawer> createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: 200,
+              child: DrawerHeader(
+                padding: const EdgeInsets.only(left: 25, right: 25),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const CircleAvatar(
+                      radius: 40,
+                      backgroundImage:
+                      AssetImage('assets/user_avatar_small.png'),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Лавлинский А. С.",
+                            style: Theme.of(context).textTheme.titleMedium)
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Студент",
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ),
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: NavDrawer.itemText.length - 1,
+                itemBuilder: (BuildContext context, int index) {
+                  return AppDrawerTile(
+                    index: index,
+                    onTap: widget.onTileTap,
+                  );
+                }, separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  height: 10,
+                );
+              },
+              )
+            ),
+            Container(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Column(
+                  children: [
+                    const Divider(),
+                    AppDrawerTile(
+                      index: 10,
+                      onTap: widget.onTileTap,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      )
+    );
+  }
+}
+
+class AppDrawerTile extends StatelessWidget {
+  const AppDrawerTile({Key? key, required this.index, required this.onTap})
+      : super(key: key);
+
+  final int index;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        leading: SizedBox(
+          width: 60,
+          child: NavDrawer.itemIcon[index]
+        ),
+        title: Text(
+          NavDrawer.itemText[index],
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        onTap: onTap(index)
+    );
+  }
+}
