@@ -66,7 +66,8 @@ class _NavDrawerBottomState extends State<NavDrawerBottom> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           selectedFontSize: 0.0,
-          unselectedFontSize: 0.0
+          unselectedFontSize: 0.0,
+          type: BottomNavigationBarType.fixed,
         ),
       )
     );
