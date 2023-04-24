@@ -87,18 +87,14 @@ class _NavDrawerState extends State<NavDrawer> {
               ),
             ),
             Expanded(
-              child: ListView.separated(
+              child: ListView.builder(
                 itemCount: NavDrawer.itemText.length - 1,
                 itemBuilder: (BuildContext context, int index) {
                   return AppDrawerTile(
                     index: index,
                     onTap: widget.onTileTap,
                   );
-                }, separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
+                }
               )
             ),
             Container(
@@ -131,16 +127,19 @@ class AppDrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        leading: SizedBox(
-          width: 60,
-          child: NavDrawer.itemIcon[index]
-        ),
-        title: Text(
-          NavDrawer.itemText[index],
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-        onTap: onTap(index)
+    return Container(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+          leading: SizedBox(
+              width: 60,
+              child: NavDrawer.itemIcon[index]
+          ),
+          title: Text(
+            NavDrawer.itemText[index],
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          onTap: onTap(index)
+      ),
     );
   }
 }
