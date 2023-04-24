@@ -5,6 +5,8 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("Login");
+    return Center(
+      child: Text("Login")
+    );
   }
 }

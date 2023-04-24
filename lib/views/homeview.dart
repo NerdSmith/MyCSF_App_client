@@ -5,7 +5,9 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("Home");
+    return Center(
+      child: Text("Home")
+    );
   }
 }
 
