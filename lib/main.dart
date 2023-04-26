@@ -44,6 +44,12 @@ ThemeData _createTheme() {
           fontWeight: FontWeight.bold,
           fontSize: 18.0,
         ),
+        displayMedium: TextStyle(
+          fontFamily: 'Montserrat',
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 25.0,
+        ),
         displaySmall: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
