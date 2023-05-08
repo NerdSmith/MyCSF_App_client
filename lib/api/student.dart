@@ -3,6 +3,7 @@ import 'package:mycsf_app_client/api/user.dart';
 class Student extends User {
   String? year_of_enrollment;
   String? record_book_number;
+  int? course_group;
 
   Student({
     String? username,
@@ -13,7 +14,8 @@ class Student extends User {
     String? email,
     String? phone,
     this.year_of_enrollment,
-    this.record_book_number
+    this.record_book_number,
+    this.course_group
   }) : super(
       username: username,
       password: password,
@@ -23,4 +25,11 @@ class Student extends User {
       email: email,
       phone: phone
   );
+
+  Map<String, dynamic> toJson() => {
+    'user': super.toJson(),
+    'year_of_enrollment': year_of_enrollment,
+    'record_book_number': record_book_number,
+    'course_group': course_group,
+  };
 }

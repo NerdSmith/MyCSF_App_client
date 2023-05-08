@@ -21,4 +21,9 @@ class Professor extends User {
       email: email,
       phone: phone
   );
+
+  Map<String, dynamic> toJson() => {
+    'user': super.toJson(),
+    'department': department,
+  };
 }

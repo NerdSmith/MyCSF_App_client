@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mycsf_app_client/api/apiconfig.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Jwt {
-  static const _apiUrl = 'http://127.0.0.1:8000';
   static Future<String> login(String email, String password) async {
     final response = await http.post(
-      '$_apiUrl/login' as Uri,
+      '$apiUrl/login' as Uri,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': email,

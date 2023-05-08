@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:http/http.dart' as http;
+import 'package:mycsf_app_client/api/coursegroup.dart';
 import 'package:mycsf_app_client/api/professor.dart';
 import 'package:mycsf_app_client/api/student.dart';
 import 'package:mycsf_app_client/api/user.dart';
@@ -26,11 +30,17 @@ class _SignUpViewState extends State<SignUpView> {
   final _formKey = GlobalKey<FormState>();
   UserRole _role = UserRole.student;
   late User _user;
+  final TextEditingController _typeAheadController = TextEditingController();
+  List<CourseGroup> _courseGroup = [];
+  CourseGroup? _selectedSuggestion;
 
   @override
   void initState() {
     super.initState();
     _user = Student();
+    CourseGroup.fetchAll().then((data) => setState(() {
+      _courseGroup = data;
+    }));
   }
 
   Widget _createFormField(
@@ -211,6 +221,85 @@ class _SignUpViewState extends State<SignUpView> {
                         (_user as Student).record_book_number = value;
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 45, right: 45, bottom: 6),
+                      child: SizedBox(
+                        height: 70,
+                        child: TypeAheadFormField(
+                          validator: (val) {
+                            if (
+                              val == null ||
+                              val.isEmpty ||
+                              _selectedSuggestion == null
+                            ) {
+                              return "Выберите данные из списка";
+                            }
+                            return null;
+                          },
+                          direction: AxisDirection.up,
+                          textFieldConfiguration: TextFieldConfiguration(
+                              onChanged: (value) {
+                                _selectedSuggestion = null;
+                              },
+                              controller: _typeAheadController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              filled: true,
+                              hintStyle: TextStyle(color: Colors.grey[900]),
+                              hintText: "Курс, группа, уровень образования",
+                              fillColor: Color(0xFFEDEDED),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 14.0, bottom: 6.0, top: 8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFEDEDED)),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFEDEDED)),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                            style: Theme.of(context).textTheme.displaySmall
+                          ),
+                          // style: Theme.of(context).textTheme.displaySmall,
+                          suggestionsCallback: (pattern) async {
+                            return _courseGroup.where((item) =>
+                                item.toString().toLowerCase().contains(pattern.toLowerCase()));
+                          },
+                          itemBuilder: (context, suggestion) {
+                            return ListTile(
+                              title: Text(
+                                suggestion.toString(),
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            setState(() {
+                              _selectedSuggestion = suggestion;
+                            });
+                            _typeAheadController.text = suggestion.toString();
+                          },
+                          noItemsFoundBuilder: (BuildContext context) {
+                            return ListTile(
+                              title: Text(
+                                "Нет результатов",
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            );
+                          },
+                          onSaved: (value) {
+                            (_user as Student).course_group =
+                                _selectedSuggestion!.id;
+                          },
+                        ),
+                      ),
+                    )
+
                   ],
                 ),
               if (_role == UserRole.teacher)
@@ -222,7 +311,7 @@ class _SignUpViewState extends State<SignUpView> {
                   },
                 ),
               Padding(
-                padding: const EdgeInsets.only(left: 45, right: 45, top: 30, bottom: 10),
+                padding: const EdgeInsets.only(left: 45, right: 45, top: 10, bottom: 10),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -238,7 +327,14 @@ class _SignUpViewState extends State<SignUpView> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        print(_user.email);
+                        switch (_role) {
+                          case UserRole.teacher:
+                            print(jsonEncode((_user as Professor).toJson()));
+                            break;
+                          case UserRole.student:
+                            print(jsonEncode((_user as Student).toJson()));
+                            break;
+                        }
                       }
                     },
                     child: Text(
