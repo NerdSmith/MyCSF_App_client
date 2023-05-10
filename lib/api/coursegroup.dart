@@ -49,7 +49,7 @@ class CourseGroup {
   static Future<List<CourseGroup>> fetchAll() async {
     final response = await http.get(
       Uri.parse('$apiUrl/api/courseGroup/')
-    );
+    ).timeout(const Duration(seconds: 2));
     if (response.statusCode == 200) {
       final data = parse(response.body);
       return data;

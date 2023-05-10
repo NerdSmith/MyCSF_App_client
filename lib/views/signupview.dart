@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
+import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/api/coursegroup.dart';
+import 'package:mycsf_app_client/api/jwt.dart';
 import 'package:mycsf_app_client/api/professor.dart';
 import 'package:mycsf_app_client/api/student.dart';
 import 'package:mycsf_app_client/api/user.dart';
@@ -20,13 +22,16 @@ import 'package:mycsf_app_client/api/userrole.dart';
 // }
 
 class SignUpView extends StatefulWidget {
-  const SignUpView({Key? key}) : super(key: key);
+  Function onSuccess;
+
+  SignUpView({Key? key, required this.onSuccess}) : super(key: key);
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignUpViewState extends State<SignUpView> {
+class _SignUpViewState extends State<SignUpView>
+    with AutomaticKeepAliveClientMixin {
   final _formKey = GlobalKey<FormState>();
   UserRole _role = UserRole.student;
   late User _user;
@@ -38,35 +43,34 @@ class _SignUpViewState extends State<SignUpView> {
   void initState() {
     super.initState();
     _user = Student();
-    CourseGroup.fetchAll().then((data) => setState(() {
-      _courseGroup = data;
-    }));
+    CourseGroup.fetchAll()
+        .then((data) => setState(() {
+              _courseGroup = data;
+            }))
+        .catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ошибка загрузки данных'),
+        ),
+      );
+    });
   }
 
-  Widget _createFormField(
-      String hintText,
-      String errMsg,
-      {
-        required onSaved,
-        bool isSecret = false
-      }
-      ) {
+  Widget _createFormField(String hintText, String errMsg,
+      {required onSaved, bool isSecret = false}) {
     return Padding(
       padding: const EdgeInsets.only(left: 45, right: 45, bottom: 6),
       child: SizedBox(
         height: 70,
         child: TextFormField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15)
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
             filled: true,
             hintStyle: TextStyle(color: Colors.grey[900]),
             hintText: hintText,
             fillColor: Color(0xFFEDEDED),
-            contentPadding: const EdgeInsets.only(
-                left: 14.0, bottom: 6.0, top: 8.0
-            ),
+            contentPadding:
+                const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color(0xFFEDEDED)),
               borderRadius: BorderRadius.circular(15.0),
@@ -102,10 +106,8 @@ class _SignUpViewState extends State<SignUpView> {
             children: [
               Padding(
                 padding: EdgeInsets.only(bottom: 30),
-                child: Text(
-                    "Регистрация",
-                    style: Theme.of(context).textTheme.titleLarge
-                ),
+                child: Text("Регистрация",
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               _createFormField(
                 "Имя пользователя",
@@ -114,14 +116,9 @@ class _SignUpViewState extends State<SignUpView> {
                   _user.username = value;
                 },
               ),
-              _createFormField(
-                "Пароль",
-                "Введите пароль",
-                onSaved: (value) {
-                  _user.password = value;
-                },
-                isSecret: true
-              ),
+              _createFormField("Пароль", "Введите пароль", onSaved: (value) {
+                _user.password = value;
+              }, isSecret: true),
               _createFormField(
                 "Фамилия",
                 "Введите фамилию",
@@ -158,7 +155,8 @@ class _SignUpViewState extends State<SignUpView> {
                 },
               ),
               Padding(
-                  padding: const EdgeInsets.only(left: 45, right: 45, bottom: 25),
+                  padding:
+                      const EdgeInsets.only(left: 45, right: 45, bottom: 25),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(0xFFEDEDED),
@@ -180,10 +178,8 @@ class _SignUpViewState extends State<SignUpView> {
                               });
                             },
                           ),
-                          Text(
-                              'Студент',
-                              style: Theme.of(context).textTheme.displaySmall
-                          ),
+                          Text('Студент',
+                              style: Theme.of(context).textTheme.displaySmall),
                           Radio(
                             value: UserRole.teacher,
                             groupValue: _role,
@@ -194,16 +190,13 @@ class _SignUpViewState extends State<SignUpView> {
                               });
                             },
                           ),
-                          Text(
-                              'Преподаватель',
-                              style: Theme.of(context).textTheme.displaySmall
-                          ),
+                          Text('Преподаватель',
+                              style: Theme.of(context).textTheme.displaySmall),
                           Spacer()
                         ],
                       ),
                     ),
-                  )
-              ),
+                  )),
               if (_role == UserRole.student)
                 Column(
                   children: [
@@ -222,17 +215,15 @@ class _SignUpViewState extends State<SignUpView> {
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 45, right: 45, bottom: 6),
+                      padding:
+                          const EdgeInsets.only(left: 45, right: 45, bottom: 6),
                       child: SizedBox(
                         height: 70,
                         child: TypeAheadFormField(
                           validator: (val) {
-                            if (
-                              val == null ||
-                              val.isEmpty ||
-                              _selectedSuggestion == null
-                            ) {
+                            if (val == null ||
+                                val.isEmpty ||
+                                _selectedSuggestion == null) {
                               return "Выберите данные из списка";
                             }
                             return null;
@@ -243,32 +234,33 @@ class _SignUpViewState extends State<SignUpView> {
                                 _selectedSuggestion = null;
                               },
                               controller: _typeAheadController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              filled: true,
-                              hintStyle: TextStyle(color: Colors.grey[900]),
-                              hintText: "Курс, группа, уровень образования",
-                              fillColor: Color(0xFFEDEDED),
-                              contentPadding: const EdgeInsets.only(
-                                  left: 14.0, bottom: 6.0, top: 8.0),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFEDEDED)),
-                                borderRadius: BorderRadius.circular(15.0),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                filled: true,
+                                hintStyle: TextStyle(color: Colors.grey[900]),
+                                hintText: "Курс, группа, уровень образования",
+                                fillColor: Color(0xFFEDEDED),
+                                contentPadding: const EdgeInsets.only(
+                                    left: 14.0, bottom: 6.0, top: 8.0),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFEDEDED)),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFEDEDED)),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFEDEDED)),
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            style: Theme.of(context).textTheme.displaySmall
-                          ),
+                              style: Theme.of(context).textTheme.displaySmall),
                           // style: Theme.of(context).textTheme.displaySmall,
                           suggestionsCallback: (pattern) async {
-                            return _courseGroup.where((item) =>
-                                item.toString().toLowerCase().contains(pattern.toLowerCase()));
+                            return _courseGroup.where((item) => item
+                                .toString()
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()));
                           },
                           itemBuilder: (context, suggestion) {
                             return ListTile(
@@ -293,13 +285,12 @@ class _SignUpViewState extends State<SignUpView> {
                             );
                           },
                           onSaved: (value) {
-                            (_user as Student).course_group =
+                            (_user as Student).course_group_id =
                                 _selectedSuggestion!.id;
                           },
                         ),
                       ),
                     )
-
                   ],
                 ),
               if (_role == UserRole.teacher)
@@ -311,7 +302,8 @@ class _SignUpViewState extends State<SignUpView> {
                   },
                 ),
               Padding(
-                padding: const EdgeInsets.only(left: 45, right: 45, top: 10, bottom: 10),
+                padding: const EdgeInsets.only(
+                    left: 45, right: 45, top: 10, bottom: 10),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -329,18 +321,74 @@ class _SignUpViewState extends State<SignUpView> {
                         _formKey.currentState!.save();
                         switch (_role) {
                           case UserRole.teacher:
-                            print(jsonEncode((_user as Professor).toJson()));
+                            Professor.createProfessor(_user as Professor)
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Пользователь создан'),
+                                ),
+                              );
+                              Future.delayed(const Duration(seconds: 1));
+                              Jwt.login(_user.username!, _user.password!)
+                                  .then((value) {
+                                Future.delayed(const Duration(seconds: 1));
+                                Auth.setRole(Role.professor); // TODO: replace with request
+                                widget.onSuccess();
+                              }).catchError((error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Ошибка создания: $error'),
+                                  ),
+                                );
+                              });
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Ошибка создания'),
+                                ),
+                              );
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Ошибка создания: $error'),
+                                ),
+                              );
+                            });
                             break;
                           case UserRole.student:
-                            print(jsonEncode((_user as Student).toJson()));
+                            Student.createStudent(_user as Student)
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Пользователь создан'),
+                                ),
+                              );
+                              Future.delayed(const Duration(seconds: 1));
+                              Jwt.login(_user.username!, _user.password!)
+                                  .then((value) {
+                                Future.delayed(const Duration(seconds: 1));
+                                Auth.setRole(Role.student); // TODO: replace with request
+                                widget.onSuccess();
+                              }).catchError((error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Ошибка создания: $error'),
+                                  ),
+                                );
+                              });
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Ошибка создания: $error'),
+                                ),
+                              );
+                            });
                             break;
                         }
                       }
                     },
-                    child: Text(
-                        'Зарегистрироваться',
-                        style: Theme.of(context).textTheme.displayMedium
-                    ),
+                    child: Text('Зарегистрироваться',
+                        style: Theme.of(context).textTheme.displayMedium),
                   ),
                 ),
               )
@@ -350,4 +398,7 @@ class _SignUpViewState extends State<SignUpView> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

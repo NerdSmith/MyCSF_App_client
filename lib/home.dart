@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/appbar.dart';
 import 'package:mycsf_app_client/drawer.dart';
 import 'package:mycsf_app_client/drawerbottom.dart';
@@ -16,20 +17,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedViewIdx = -1;
-  final List<Widget> _screens = [
-    const LoginView(),
-    const SignUpView(),
-    const NullView("Profile"),
-    const NullView("Moodle"),
-    const NullView("Brs"),
-    const NullView("Map"),
-    const NullView("Schedule"),
-    const NullView("Calendar"),
-    const NullView("AI"),
-    const NullView("Chat"),
-    const NullView("Settings"),
-  ];
-  final home = const HomeView();
 
   Function setNewViewIdx(int index) {
     return () {
@@ -46,6 +33,31 @@ class _HomeState extends State<Home> {
     });
   }
 
+  List<Widget> _screens = [];
+  final home = const HomeView();
+
+  @override
+  void initState() {
+    super.initState();
+    Auth.performAuthCheck();
+    setState(() {
+      _screens = [
+        const LoginView(),
+        SignUpView(onSuccess: () {
+          setNewViewIdx4Bottom(-1);
+        }),
+        const NullView("Profile"),
+        const NullView("Moodle"),
+        const NullView("Brs"),
+        const NullView("Map"),
+        const NullView("Schedule"),
+        const NullView("Calendar"),
+        const NullView("AI"),
+        const NullView("Chat"),
+        const NullView("Settings"),
+      ];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
