@@ -21,6 +21,12 @@ class MyApp extends StatelessWidget {
 ThemeData _createTheme() {
   return ThemeData(
       textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          fontFamily: 'Montserrat',
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 35.0,
+        ),
         titleMedium: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
@@ -37,6 +43,17 @@ ThemeData _createTheme() {
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 18.0,
+        ),
+        displayMedium: TextStyle(
+          fontFamily: 'Montserrat',
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 25.0,
+        ),
+        displaySmall: TextStyle(
+          fontFamily: 'Montserrat',
+          color: Colors.black,
+          fontSize: 20.0,
         ),
       )
   );

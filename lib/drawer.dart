@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mycsf_app_client/api/auth.dart';
+import 'package:mycsf_app_client/api/user.dart';
 
 class NavDrawer extends StatefulWidget {
   Function onTileTap;
@@ -38,83 +40,122 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+  User? _user;
+  Role? _currentRole;
+
+  @override
+  void initState() {
+    super.initState();
+    Auth.getCurrentRole().then((value) {
+      setState(() {
+        _currentRole = value;
+      });
+      if (value != Role.unauthorized) {
+        Auth.getUserInfo().then((value) {
+          setState(() {
+            _user = value;
+          });
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(_currentRole);
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 200,
-              child: DrawerHeader(
-                padding: const EdgeInsets.only(left: 25, right: 25),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                      AssetImage('assets/user_avatar_small.png'),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text("Лавлинский А. С.",
-                            style: Theme.of(context).textTheme.titleMedium)
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Студент",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      ],
-                    ),
-                  ],
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Drawer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_currentRole == Role.unauthorized)
+                SizedBox(
+                  height: 200,
+                  child: DrawerHeader(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    child: Column(),
+                  ),
                 )
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: NavDrawer.itemText.length - 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return AppDrawerTile(
-                    index: index,
-                    onTap: widget.onTileTap,
-                  );
-                }
-              )
-            ),
-            Container(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Column(
-                  children: [
-                    const Divider(),
-                    AppDrawerTile(
-                      index: 10,
-                      onTap: widget.onTileTap,
-                    ),
-                  ],
+              else
+                SizedBox(
+                  height: 200,
+                  child: DrawerHeader(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const CircleAvatar(
+                            radius: 40,
+                            backgroundImage:
+                                AssetImage('assets/user_avatar_small.png'),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(Auth.getFullName(
+                                  _user?.second_name,
+                                  _user?.first_name,
+                                  _user?.patronymic
+                              ),
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium)
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                Auth.getRoleStr(_currentRole),
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
                 ),
-              ),
-            )
-          ],
-        ),
-      )
-    );
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: NavDrawer.itemText.length - 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        // cond when unauthorized
+                        if (_currentRole == Role.unauthorized && index == 2) {
+                          return SizedBox.shrink();
+                        }
+                        if (_currentRole != Role.unauthorized &&
+                            (index == 0 || index == 1)) {
+                          return SizedBox.shrink();
+                        }
+                        return AppDrawerTile(
+                          index: index,
+                          onTap: widget.onTileTap,
+                        );
+                      })),
+              Container(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Column(
+                    children: [
+                      const Divider(),
+                      AppDrawerTile(
+                        index: 10,
+                        onTap: widget.onTileTap,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
 
@@ -130,16 +171,12 @@ class AppDrawerTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
       child: ListTile(
-          leading: SizedBox(
-              width: 60,
-              child: NavDrawer.itemIcon[index]
-          ),
+          leading: SizedBox(width: 60, child: NavDrawer.itemIcon[index]),
           title: Text(
             NavDrawer.itemText[index],
             style: Theme.of(context).textTheme.displayLarge,
           ),
-          onTap: onTap(index)
-      ),
+          onTap: onTap(index)),
     );
   }
 }
