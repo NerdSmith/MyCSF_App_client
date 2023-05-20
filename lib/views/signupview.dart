@@ -10,17 +10,6 @@ import 'package:mycsf_app_client/api/student.dart';
 import 'package:mycsf_app_client/api/user.dart';
 import 'package:mycsf_app_client/api/userrole.dart';
 
-// class SignUpView extends StatelessWidget {
-//   const SignUpView({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Text("Signup")
-//     );
-//   }
-// }
-
 class SignUpView extends StatefulWidget {
   Function onSuccess;
 
@@ -221,11 +210,6 @@ class _SignUpViewState extends State<SignUpView>
                         height: 70,
                         child: TypeAheadFormField(
                           validator: (val) {
-                            if (val == null ||
-                                val.isEmpty ||
-                                _selectedSuggestion == null) {
-                              return "Выберите данные из списка";
-                            }
                             return null;
                           },
                           direction: AxisDirection.up,
@@ -285,8 +269,13 @@ class _SignUpViewState extends State<SignUpView>
                             );
                           },
                           onSaved: (value) {
-                            (_user as Student).course_group_id =
-                                _selectedSuggestion!.id;
+                            if (_selectedSuggestion != null) {
+                              (_user as Student).course_group_id =
+                                  _selectedSuggestion!.id;
+                            }
+                            else {
+                              (_user as Student).course_group_id = null;
+                            }
                           },
                         ),
                       ),

@@ -50,6 +50,11 @@ class Auth {
     }
   }
 
+  static Future<void> performLogout() async {
+    Jwt.deleteTokens();
+    Auth.setRole(Role.unauthorized);
+  }
+
   static Future<User> getUserInfo() async {
     final response = await http.get(
       Uri.parse('$apiUrl/api/auth/users/shortinfo/0/'),

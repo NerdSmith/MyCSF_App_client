@@ -6,6 +6,7 @@ import 'package:mycsf_app_client/drawerbottom.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
 import 'package:mycsf_app_client/views/nullview.dart';
+import 'package:mycsf_app_client/views/settingsview.dart';
 import 'package:mycsf_app_client/views/signupview.dart';
 
 class Home extends StatefulWidget {
@@ -54,7 +55,11 @@ class _HomeState extends State<Home> {
         const NullView("Calendar"),
         const NullView("AI"),
         const NullView("Chat"),
-        const NullView("Settings"),
+        SettingsView(
+          setHome: () {
+            setNewViewIdx4Bottom(-1);
+          },
+        )
       ];
     });
   }
