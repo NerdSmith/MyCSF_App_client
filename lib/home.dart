@@ -4,9 +4,10 @@ import 'package:mycsf_app_client/api/avatar.dart';
 import 'package:mycsf_app_client/appbar.dart';
 import 'package:mycsf_app_client/drawer.dart';
 import 'package:mycsf_app_client/drawerbottom.dart';
-import 'package:mycsf_app_client/views/BrsView.dart';
+import 'package:mycsf_app_client/views/brsview.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
+import 'package:mycsf_app_client/views/moodleview.dart';
 import 'package:mycsf_app_client/views/nullview.dart';
 import 'package:mycsf_app_client/views/profileview.dart';
 import 'package:mycsf_app_client/views/settingsview.dart';
@@ -68,7 +69,9 @@ class _HomeState extends State<Home> {
           setNewViewIdx4Bottom(-1);
         }), // 1
         ProfileView(), // 2
-        const NullView("Moodle"), // 3
+        MoodleView(redirectToLogin: () {
+          setNewViewIdx4Bottom(0);
+        }), // 3
         BrsView(redirectToLogin: () {
           setNewViewIdx4Bottom(0);
         }), // 4

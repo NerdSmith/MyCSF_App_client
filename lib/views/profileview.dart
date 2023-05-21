@@ -231,7 +231,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 style: Theme
                                     .of(context)
                                     .textTheme
-                                    .displayMedium),
+                                    .displaySmall),
                           ),
                         ),
                       )
