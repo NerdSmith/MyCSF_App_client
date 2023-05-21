@@ -43,7 +43,9 @@ class _HomeState extends State<Home> {
     Auth.performAuthCheck();
     setState(() {
       _screens = [
-        const LoginView(),
+        LoginView(onSuccess: () {
+          setNewViewIdx4Bottom(-1);
+        }),
         SignUpView(onSuccess: () {
           setNewViewIdx4Bottom(-1);
         }),

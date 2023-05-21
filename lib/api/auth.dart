@@ -13,6 +13,12 @@ enum Role {
   professor
 }
 
+Map<String, Role> RoleMapping = {
+  "s": Role.student,
+  "p": Role.professor,
+  "n": Role.unauthorized
+};
+
 extension RoleExtension on Role {
   String toStringValue() {
     return toString().split('.').last;
@@ -53,6 +59,17 @@ class Auth {
   static Future<void> performLogout() async {
     Jwt.deleteTokens();
     Auth.setRole(Role.unauthorized);
+  }
+
+  static Future<Role> getRole() async {
+    try {
+      User u = await getUserInfo();
+      print("role login set: ${u.role}", );
+      return RoleMapping[u.role]!;
+    }
+    catch (e) {
+      throw Exception("Cant receive User obj");
+    }
   }
 
   static Future<User> getUserInfo() async {
