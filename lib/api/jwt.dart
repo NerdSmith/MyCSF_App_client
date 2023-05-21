@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:mycsf_app_client/api/apiconfig.dart';
+import 'package:mycsf_app_client/api/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Jwt {
@@ -21,11 +22,16 @@ class Jwt {
       final access = body['access'];
       await _saveAccess(access);
       await _saveRefresh(refresh);
+      Auth.getRole().then((value) {
+        Auth.setRole(
+            value
+        );
+      });
       return access;
     }
     else {
       print("login - failed");
-      throw Exception('Failed to register');
+      throw Exception('Failed to login');
     }
   }
 
@@ -45,7 +51,7 @@ class Jwt {
       return access;
     }
     else {
-      throw Exception('Failed to register');
+      throw Exception('Failed to refresh');
     }
   }
 

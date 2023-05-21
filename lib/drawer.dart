@@ -62,7 +62,6 @@ class _NavDrawerState extends State<NavDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    print(_currentRole);
     return SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: Drawer(

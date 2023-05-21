@@ -272,8 +272,7 @@ class _SignUpViewState extends State<SignUpView>
                             if (_selectedSuggestion != null) {
                               (_user as Student).course_group_id =
                                   _selectedSuggestion!.id;
-                            }
-                            else {
+                            } else {
                               (_user as Student).course_group_id = null;
                             }
                           },
@@ -321,7 +320,6 @@ class _SignUpViewState extends State<SignUpView>
                               Jwt.login(_user.username!, _user.password!)
                                   .then((value) {
                                 Future.delayed(const Duration(seconds: 1));
-                                Auth.setRole(Role.professor); // TODO: replace with request
                                 widget.onSuccess();
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -356,7 +354,6 @@ class _SignUpViewState extends State<SignUpView>
                               Jwt.login(_user.username!, _user.password!)
                                   .then((value) {
                                 Future.delayed(const Duration(seconds: 1));
-                                Auth.setRole(Role.student); // TODO: replace with request
                                 widget.onSuccess();
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
