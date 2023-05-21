@@ -53,16 +53,33 @@ class _NavDrawerState extends State<NavDrawer> {
       if (value != Role.unauthorized) {
         Auth.getUserInfo().then((value) {
           setState(() {
-            _user = value;
+            if (_user != value) {
+              _user = value;
+            }
           });
         });
       }
     });
   }
 
+  CircleAvatar getAvatar() {
+    if (_user != null && _user!.avatar != null) {
+      return CircleAvatar(
+        radius: 40,
+        backgroundImage: NetworkImage(_user!.avatar!),
+        backgroundColor: Colors.transparent,
+        child: _user!.avatar != null ? null : CircularProgressIndicator(),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 40,
+        backgroundImage: AssetImage('assets/user_avatar_small.png'),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(_currentRole);
     return SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: Drawer(
@@ -87,22 +104,16 @@ class _NavDrawerState extends State<NavDrawer> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const CircleAvatar(
-                            radius: 40,
-                            backgroundImage:
-                                AssetImage('assets/user_avatar_small.png'),
-                          ),
+                          getAvatar(),
                           const SizedBox(
                             height: 15,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(Auth.getFullName(
-                                  _user?.second_name,
-                                  _user?.first_name,
-                                  _user?.patronymic
-                              ),
+                              Text(
+                                  Auth.getFullName(_user?.second_name,
+                                      _user?.first_name, _user?.patronymic),
                                   style:
                                       Theme.of(context).textTheme.titleMedium)
                             ],

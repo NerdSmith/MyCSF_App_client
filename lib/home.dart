@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/auth.dart';
+import 'package:mycsf_app_client/api/avatar.dart';
 import 'package:mycsf_app_client/appbar.dart';
 import 'package:mycsf_app_client/drawer.dart';
 import 'package:mycsf_app_client/drawerbottom.dart';
+import 'package:mycsf_app_client/views/BrsView.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
 import 'package:mycsf_app_client/views/nullview.dart';
+import 'package:mycsf_app_client/views/profileview.dart';
 import 'package:mycsf_app_client/views/settingsview.dart';
 import 'package:mycsf_app_client/views/signupview.dart';
 
@@ -18,9 +21,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedViewIdx = -1;
+  String? _avatarUrl;
 
   Function setNewViewIdx(int index) {
     return () {
+      AvatarService.fetchAvatar().then((value) {
+        if (_avatarUrl != value) {
+          setState(() {
+            _avatarUrl = value;
+          });
+        }
+      });
       setState(() {
         _selectedViewIdx = index;
       });
@@ -29,6 +40,13 @@ class _HomeState extends State<Home> {
   }
 
   void setNewViewIdx4Bottom(int index) {
+    AvatarService.fetchAvatar().then((value) {
+      if (_avatarUrl != value) {
+        setState(() {
+          _avatarUrl = value;
+        });
+      }
+    });
     setState(() {
       _selectedViewIdx = index;
     });
@@ -45,24 +63,33 @@ class _HomeState extends State<Home> {
       _screens = [
         LoginView(onSuccess: () {
           setNewViewIdx4Bottom(-1);
-        }),
+        }), // 0
         SignUpView(onSuccess: () {
           setNewViewIdx4Bottom(-1);
-        }),
-        const NullView("Profile"),
-        const NullView("Moodle"),
-        const NullView("Brs"),
-        const NullView("Map"),
-        const NullView("Schedule"),
-        const NullView("Calendar"),
-        const NullView("AI"),
-        const NullView("Chat"),
+        }), // 1
+        ProfileView(), // 2
+        const NullView("Moodle"), // 3
+        BrsView(redirectToLogin: () {
+          setNewViewIdx4Bottom(0);
+        }), // 4
+        const NullView("Map"), // 5
+        const NullView("Schedule"), // 6
+        const NullView("Calendar"), // 7
+        const NullView("AI"), // 8
+        const NullView("Chat"), // 9
         SettingsView(
           setHome: () {
             setNewViewIdx4Bottom(-1);
           },
-        )
+        ) // 10
       ];
+    });
+    AvatarService.fetchAvatar().then((value) {
+      if (_avatarUrl != value) {
+        setState(() {
+          _avatarUrl = value;
+        });
+      }
     });
   }
 
@@ -78,7 +105,7 @@ class _HomeState extends State<Home> {
           onTileTap: setNewViewIdx4Bottom,
           selectedIdx: _selectedViewIdx
       ),
-      appBar: createAppBar(context),
+      appBar: MyAppBar(avatarUrl: _avatarUrl),
       body: selectedView,
     );
   }

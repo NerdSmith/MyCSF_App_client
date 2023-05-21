@@ -7,9 +7,10 @@ class User {
   String? email;
   String? phone;
   String? role;
+  String? avatar;
 
   User({this.username, this.password, this.first_name, this.second_name,
-      this.patronymic, this.email, this.phone, this.role});
+      this.patronymic, this.email, this.phone, this.role, this.avatar});
 
   Map<String, dynamic> toJson() => {
     'username': username,
@@ -30,7 +31,8 @@ class User {
       patronymic: json['patronymic'],
       email: json['email'],
       phone: json['phone'],
-      role: json['role']
+      role: json['role'],
+      avatar: json['avatar']
     );
   }
 }

@@ -88,6 +88,38 @@ class Auth {
     }
   }
 
+  static Future<bool> updateUserInfo({
+    String first_name = "",
+    String second_name = "",
+    String patronymic = "",
+    String email = "",
+    String phone = "",
+}) async {
+    var request = http.MultipartRequest(
+      'PATCH',
+      Uri.parse('$apiUrl/api/users/avatars/-1/'),
+    );
+    request.headers.addAll({
+      'Content-Type': 'application/json',
+      'Authorization': await Auth.getAuthStr()
+    });
+
+    request.fields["first_name"] = first_name;
+    request.fields["second_name"] = second_name;
+    request.fields["patronymic"] = patronymic;
+    request.fields["email"] = email;
+    request.fields["phone"] = phone;
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      dynamic data = jsonDecode(utf8.decode((await response.stream.bytesToString()).runes.toList()));
+      throw Exception(data);
+    }
+  }
+
   static Future<bool> isUnauthorized() async {
     return await getCurrentRole() == Role.unauthorized;
   }
