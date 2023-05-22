@@ -17,21 +17,14 @@ class MoodleView extends StatefulWidget {
 class _MoodleViewState extends State<MoodleView> {
   WebViewController? _controller;
 
-  @override
-  void initState() {
-    super.initState();
-    Auth.getCurrentRole().then((value) {
-      if (value == Role.unauthorized) {
-        widget.redirectToLogin();
-      }
-    });
-  }
 
   void _fillFormFields() {
     if (_controller != null) {
-      MoodleClaims().getLogPassClaims().then((value) {
-        if (value != null) {
-          _controller!.runJavascript('''
+      Auth.getCurrentRole().then((value) {
+        if (value != Role.unauthorized) {
+          MoodleClaims().getLogPassClaims().then((value) {
+            if (value != null) {
+              _controller!.runJavascript('''
           if (document.getElementById('username') != null) {
             document.getElementById('username').value = '${value.login}';
             document.getElementById('password').value = '${value.password}';
@@ -45,6 +38,8 @@ class _MoodleViewState extends State<MoodleView> {
             }
           }
           ''');
+            }
+          });
         }
       });
     }

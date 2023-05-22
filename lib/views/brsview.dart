@@ -16,21 +16,13 @@ class BrsView extends StatefulWidget {
 class _BrsViewState extends State<BrsView> {
   WebViewController? _controller;
 
-  @override
-  void initState() {
-    super.initState();
-    Auth.getCurrentRole().then((value) {
-      if (value == Role.unauthorized) {
-        widget.redirectToLogin();
-      }
-    });
-  }
-
   void _fillFormFields() {
     if (_controller != null) {
-      BrsClaims().getLogPassClaims().then((value) {
-        if (value != null) {
-          _controller!.runJavascript('''
+      Auth.getCurrentRole().then((value) {
+        if (value != Role.unauthorized) {
+          BrsClaims().getLogPassClaims().then((value) {
+            if (value != null) {
+              _controller!.runJavascript('''
           if (document.getElementById('login') != null) {
             document.getElementById('login').value = '${value.login}';
             document.getElementById('password').value = '${value.password}';
@@ -38,8 +30,11 @@ class _BrsViewState extends State<BrsView> {
             button.click();
           }
           ''');
+            }
+          });
         }
       });
+
     }
   }
 
