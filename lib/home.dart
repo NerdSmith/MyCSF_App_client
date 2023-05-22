@@ -7,6 +7,7 @@ import 'package:mycsf_app_client/drawerbottom.dart';
 import 'package:mycsf_app_client/views/brsview.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
+import 'package:mycsf_app_client/views/mapview.dart';
 import 'package:mycsf_app_client/views/moodleview.dart';
 import 'package:mycsf_app_client/views/nullview.dart';
 import 'package:mycsf_app_client/views/profileview.dart';
@@ -75,7 +76,7 @@ class _HomeState extends State<Home> {
         BrsView(redirectToLogin: () {
           setNewViewIdx4Bottom(0);
         }), // 4
-        const NullView("Map"), // 5
+        MapView(), // 5
         const NullView("Schedule"), // 6
         const NullView("Calendar"), // 7
         const NullView("AI"), // 8
