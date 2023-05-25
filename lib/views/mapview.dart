@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mycsf_app_client/api/map.dart';
 
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
@@ -9,18 +10,106 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   bool _isListOpen = false;
+  Map<String, String> buildingsRu = {};
+  List<MyMap>? maps;
+  String selectedKey = "m";// MAIN BUILDING
+  int? selectedLayer;
+  String? currUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    MapController.getRuBuildings().then((value) {
+      setState(() {
+        buildingsRu = value;
+      });
+      MapController.getMapsByBuilding(selectedKey).then(
+              (value) {
+            setState(() {
+              maps = value;
+            });
+            if (maps != null) {
+              int minLayer = maps!.reduce((value, element) =>
+              element.buildingLevel < value.buildingLevel ? element : value
+              ).buildingLevel;
+              setState(() {
+                selectedLayer = minLayer;
+              });
+              String? newUrl = getImageUrl(maps, selectedKey, minLayer);
+              setState(() {
+                currUrl = newUrl;
+              });
+              // print("$maps, $selectedKey, $selectedLayer, $newUrl");
+            }
+
+          }
+      );
+
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка загрузки данных: $error'),
+        ),
+      );
+    });
+  }
+
+  int? getNextLayer(List<MyMap>? objects, int? currentValue) {
+    if (currentValue == null || objects == null) {
+      return null;
+    }
+    List<int> filteredValues = objects
+        .where((object) => object.buildingLevel > currentValue)
+        .map((object) => object.buildingLevel)
+        .toList();
+
+    if (filteredValues.isEmpty) {
+      return objects.reduce((minObject, currentObject) =>
+        currentObject.buildingLevel < minObject.buildingLevel ?
+        currentObject :
+        minObject
+      ).buildingLevel;
+    }
+
+    int nextValue = filteredValues.fold(
+        objects
+            .map((object) => object.buildingLevel)
+            .reduce((minValue, value) => minValue > value ? minValue : value),
+            (minValue, value) => minValue < value ? minValue : value
+    );
+    return nextValue;
+  }
+
+  String? getImageUrl(List<MyMap>? maps, String? building, int? selectedLayer) {
+    // print("$maps, $building, $selectedLayer");
+    if (maps == null || building == null || selectedLayer == null) {
+      return null;
+    }
+    try {
+      MyMap? foundObj = maps.firstWhere(
+              (object) => object.building == building && object.buildingLevel == selectedLayer
+      );
+      return foundObj.mapFile;
+    }
+    catch (e) {
+      print(e);
+    }
+    return null;
+
+  }
 
   Widget _makeButton(
       {required String text,
       required Function f,
       double paddingLeft = 0,
-      double paddingRight = 0}) {
+      double paddingRight = 0,
+      double paddingBottom = 20}) {
     return Row(
       children: [
         Expanded(
             child: Padding(
           padding: EdgeInsets.only(
-              left: paddingLeft, right: paddingRight, bottom: 25),
+              left: paddingLeft, right: paddingRight, bottom: paddingBottom),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFFD9D9D9),
@@ -56,9 +145,13 @@ class _MapViewState extends State<MapView> {
                 child: Center(
                     child: Padding(
                         padding:
-                            const EdgeInsets.only(left: 20, right: 40, top: 10),
+                            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 0),
                         child: _makeButton(
-                            text: '11111',
+                            text:
+                              buildingsRu.isEmpty ?
+                              "" :
+                              "${buildingsRu[selectedKey]} $selectedLayer этаж",
+                            paddingBottom: 10,
                             f: () {
                               setState(() {
                                 _isListOpen = !_isListOpen;
@@ -69,22 +162,69 @@ class _MapViewState extends State<MapView> {
                 )
             )
         ),
+        const Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 25
+            ),
+          child: Divider(color: Colors.black,),
+        ),
         if (_isListOpen)
         Container(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxHeight: 300,
           ),
           child: SingleChildScrollView(
               child: Center(
                   child: Padding(
                       padding:
-                          const EdgeInsets.only(left: 20, right: 40, top: 0),
+                          const EdgeInsets.only(left: 20, right: 20, top: 0),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            _makeButton(text: '1', f: () {}, paddingLeft: 40, paddingRight: 40),
-                            _makeButton(text: '2', f: () {}, paddingLeft: 40, paddingRight: 40),
-
+                            for (var currBuilding in buildingsRu.entries)
+                              _makeButton(
+                                  text: currBuilding.value,
+                                  f: () {
+                                    if (selectedKey != currBuilding.key) {
+                                      setState(() {
+                                        selectedKey = currBuilding.key;
+                                      });
+                                      MapController.getMapsByBuilding(selectedKey).then(
+                                              (value) {
+                                            setState(() {
+                                              maps = value;
+                                            });
+                                            if (maps != null) {
+                                              int minLayer = maps!.reduce((value, element) =>
+                                              element.buildingLevel < value.buildingLevel ? element : value
+                                              ).buildingLevel;
+                                              setState(() {
+                                                selectedLayer = minLayer;
+                                              });
+                                              String? newUrl = getImageUrl(maps, selectedKey, minLayer);
+                                              setState(() {
+                                                currUrl = newUrl;
+                                              });
+                                              // print("$maps, $selectedKey, $selectedLayer, $newUrl");
+                                            }
+                                          }
+                                      ).catchError((error) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text('Ошибка загрузки данных: $error'),
+                                          ),
+                                        );
+                                      });
+                                      String? newUrl = getImageUrl(maps, selectedKey, selectedLayer);
+                                      setState(() {
+                                        currUrl = newUrl;
+                                      });
+                                    }
+                                  },
+                                  paddingLeft: 40,
+                                  paddingRight: 40
+                              ),
+                            const Divider(color: Colors.black,),
                           ]
                       )
                   )
@@ -102,23 +242,35 @@ class _MapViewState extends State<MapView> {
                   maxScale: 4.0,
                   child: Container(
                     constraints: BoxConstraints.expand(),
-                    child: Image.asset(
-                      "assets/example.png",
-                    ),
+                    child:
+                      currUrl == null ?
+                        Image.asset("assets/map/NO_IMAGE.png") :
+                        Image.network(currUrl!)
                   ),
                 ),
               ),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Button onPressed action
+                  padding: EdgeInsets.only(right: 20, bottom: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      int? nextLayer = getNextLayer(maps, selectedLayer);
+                      setState(() {
+                        selectedLayer = nextLayer;
+                      });
+                      String? newUrl = getImageUrl(maps, selectedKey, nextLayer);
+                      setState(() {
+                        currUrl = newUrl;
+                      });
                     },
-                    child: Text('Button'),
+                    child: Image.asset(
+                      'assets/map/layer_select.png',
+                      width: 150,
+                      height: 70,
+                    ),
                   ),
-                ),
+                )
               ),
             ],
           )),
