@@ -29,7 +29,7 @@ class _MapViewState extends State<MapView> {
                 borderRadius: BorderRadius.circular(15),
               ),
               minimumSize: Size(200, 50),
-              elevation: 1,
+              elevation: 10,
               alignment: Alignment.center,
             ),
             onPressed: () {

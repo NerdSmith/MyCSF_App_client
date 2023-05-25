@@ -201,7 +201,7 @@ class _ProfileViewState extends State<ProfileView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              elevation: 1,
+                              elevation: 10,
                             ),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {

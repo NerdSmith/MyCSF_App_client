@@ -302,7 +302,7 @@ class _SignUpViewState extends State<SignUpView>
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      elevation: 5,
+                      elevation: 10,
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
