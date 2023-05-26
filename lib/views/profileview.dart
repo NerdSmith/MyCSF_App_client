@@ -5,7 +5,9 @@ import 'package:mycsf_app_client/api/avatar.dart';
 import '../api/user.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({Key? key}) : super(key: key);
+
+  Function forceUpdateUser;
+  ProfileView({Key? key, required this.forceUpdateUser}) : super(key: key);
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
@@ -95,6 +97,7 @@ class _ProfileViewState extends State<ProfileView> {
                           content: Text('Аватар изменен'),
                         ),
                       );
+                      widget.forceUpdateUser();
                     }).catchError((err) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

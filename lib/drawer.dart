@@ -4,8 +4,15 @@ import 'package:mycsf_app_client/api/user.dart';
 
 class NavDrawer extends StatefulWidget {
   Function onTileTap;
+  User? user;
+  Role? currentRole;
 
-  NavDrawer({Key? key, required this.onTileTap}) : super(key: key);
+  NavDrawer({
+    Key? key,
+    required this.onTileTap,
+    required this.user,
+    required this.currentRole
+  }) : super(key: key);
 
   static final itemText = [
     "Вход",
@@ -40,35 +47,33 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  User? _user;
-  Role? _currentRole;
 
   @override
   void initState() {
     super.initState();
-    Auth.getCurrentRole().then((value) {
-      setState(() {
-        _currentRole = value;
-      });
-      if (value != Role.unauthorized) {
-        Auth.getUserInfo().then((value) {
-          setState(() {
-            if (_user != value) {
-              _user = value;
-            }
-          });
-        });
-      }
-    });
+    // Auth.getCurrentRole().then((value) {
+    //   setState(() {
+    //     _currentRole = value;
+    //   });
+    //   if (value != Role.unauthorized) {
+    //     Auth.getUserInfo().then((value) {
+    //       setState(() {
+    //         if (_user != value) {
+    //           _user = value;
+    //         }
+    //       });
+    //     });
+    //   }
+    // });
   }
 
   CircleAvatar getAvatar() {
-    if (_user != null && _user!.avatar != null) {
+    if (widget.user != null && widget.user!.avatar != null) {
       return CircleAvatar(
         radius: 40,
-        backgroundImage: NetworkImage(_user!.avatar!),
+        backgroundImage: NetworkImage(widget.user!.avatar!),
         backgroundColor: Colors.transparent,
-        child: _user!.avatar != null ? null : CircularProgressIndicator(),
+        child: widget.user!.avatar != null ? null : CircularProgressIndicator(),
       );
     } else {
       return CircleAvatar(
@@ -86,7 +91,7 @@ class _NavDrawerState extends State<NavDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (_currentRole == Role.unauthorized)
+              if (widget.currentRole == Role.unauthorized)
                 SizedBox(
                   height: 200,
                   child: DrawerHeader(
@@ -112,8 +117,8 @@ class _NavDrawerState extends State<NavDrawer> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                  Auth.getFullName(_user?.second_name,
-                                      _user?.first_name, _user?.patronymic),
+                                  Auth.getFullName(widget.user?.second_name,
+                                      widget.user?.first_name, widget.user?.patronymic),
                                   style:
                                       Theme.of(context).textTheme.titleMedium)
                             ],
@@ -125,7 +130,7 @@ class _NavDrawerState extends State<NavDrawer> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                Auth.getRoleStr(_currentRole),
+                                Auth.getRoleStr(widget.currentRole),
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                             ],
@@ -138,10 +143,10 @@ class _NavDrawerState extends State<NavDrawer> {
                       itemCount: NavDrawer.itemText.length - 1,
                       itemBuilder: (BuildContext context, int index) {
                         // cond when unauthorized
-                        if (_currentRole == Role.unauthorized && index == 2) {
+                        if (widget.currentRole == Role.unauthorized && index == 2) {
                           return SizedBox.shrink();
                         }
-                        if (_currentRole != Role.unauthorized &&
+                        if (widget.currentRole != Role.unauthorized &&
                             (index == 0 || index == 1)) {
                           return SizedBox.shrink();
                         }
