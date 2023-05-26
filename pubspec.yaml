@@ -106,6 +106,7 @@ flutter:
     - assets/menu_items/bottom/
     - assets/menu_items/bottom/selected/
     - assets/map/
+    - assets/map/NO_IMAGE.png
   fonts:
     - family: Montserrat
       fonts:

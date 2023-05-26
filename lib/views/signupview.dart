@@ -152,9 +152,7 @@ class _SignUpViewState extends State<SignUpView>
                       // borderSide: BorderSide(color: Color(0xFFEDEDED)),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    child: SizedBox(
-                      height: 45,
-                      child: Row(
+                    child: Row(
                         children: <Widget>[
                           Spacer(),
                           Radio(
@@ -184,8 +182,8 @@ class _SignUpViewState extends State<SignUpView>
                           Spacer()
                         ],
                       ),
-                    ),
-                  )),
+                  )
+              ),
               if (_role == UserRole.student)
                 Column(
                   children: [

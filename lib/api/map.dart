@@ -35,7 +35,6 @@ class MapController {
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': await Auth.getAuthStr()
       },
     );
     if (response.statusCode == 200) {
@@ -63,8 +62,7 @@ class MapController {
           queryParameters: {"building": buildingStr}
       ),
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': await Auth.getAuthStr()
+        'Content-Type': 'application/json'
       },
     );
     if (response.statusCode == 200) {

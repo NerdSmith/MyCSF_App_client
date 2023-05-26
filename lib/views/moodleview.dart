@@ -17,6 +17,15 @@ class MoodleView extends StatefulWidget {
 class _MoodleViewState extends State<MoodleView> {
   WebViewController? _controller;
 
+  @override
+  void initState() {
+    super.initState();
+    Auth.getCurrentRole().then((value) {
+      if (value == Role.unauthorized) {
+        widget.redirectToLogin();
+      }
+    });
+  }
 
   void _fillFormFields() {
     if (_controller != null) {

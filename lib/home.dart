@@ -54,8 +54,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  List<Widget> _screens = [];
-  final home = const HomeView();
+  var _screens = [];
+
+  home() {
+    return HomeView();
+  }
 
   @override
   void initState() {
@@ -63,29 +66,29 @@ class _HomeState extends State<Home> {
     Auth.performAuthCheck();
     setState(() {
       _screens = [
-        LoginView(onSuccess: () {
-          setNewViewIdx4Bottom(-1);
-        }), // 0
-        SignUpView(onSuccess: () {
-          setNewViewIdx4Bottom(-1);
-        }), // 1
-        ProfileView(), // 2
-        MoodleView(redirectToLogin: () {
-          setNewViewIdx4Bottom(0);
-        }), // 3
-        BrsView(redirectToLogin: () {
-          setNewViewIdx4Bottom(0);
-        }), // 4
-        MapView(), // 5
+        () => LoginView(onSuccess: () {
+              setNewViewIdx4Bottom(-1);
+            }), // 0
+        () => SignUpView(onSuccess: () {
+              setNewViewIdx4Bottom(-1);
+            }), // 1
+        () => ProfileView(), // 2
+        () => MoodleView(redirectToLogin: () {
+              setNewViewIdx4Bottom(0);
+            }), // 3
+        () => BrsView(redirectToLogin: () {
+              setNewViewIdx4Bottom(0);
+            }), // 4
+        () => MapView(), // 5
         const NullView("Schedule"), // 6
         const NullView("Calendar"), // 7
         const NullView("AI"), // 8
         const NullView("Chat"), // 9
-        SettingsView(
-          setHome: () {
-            setNewViewIdx4Bottom(-1);
-          },
-        ) // 10
+        () => SettingsView(
+              setHome: () {
+                setNewViewIdx4Bottom(-1);
+              },
+            ) // 10
       ];
     });
     AvatarService.fetchAvatar().then((value) {
@@ -99,18 +102,15 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Widget selectedView = (_selectedViewIdx != -1) ?
-      _screens[_selectedViewIdx] :
-      home;
+    var selectedView =
+        (_selectedViewIdx != -1) ? _screens[_selectedViewIdx] : home;
 
     return Scaffold(
       drawer: NavDrawer(onTileTap: setNewViewIdx),
       bottomNavigationBar: NavDrawerBottom(
-          onTileTap: setNewViewIdx4Bottom,
-          selectedIdx: _selectedViewIdx
-      ),
+          onTileTap: setNewViewIdx4Bottom, selectedIdx: _selectedViewIdx),
       appBar: MyAppBar(avatarUrl: _avatarUrl),
-      body: selectedView,
+      body: selectedView(),
     );
   }
 }

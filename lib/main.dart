@@ -25,35 +25,35 @@ ThemeData _createTheme() {
           fontFamily: 'Montserrat',
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 35.0,
+          fontSize: 30.0,
         ),
         titleMedium: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 17.0,
+          fontSize: 14.0,
         ),
         titleSmall: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
-          fontSize: 10.0,
+          fontSize: 8.0,
         ),
         displayLarge: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 18.0,
+          fontSize: 14.0,
         ),
         displayMedium: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 25.0,
+          fontSize: 20.0,
         ),
         displaySmall: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,
-          fontSize: 20.0,
+          fontSize: 15.0,
         ),
       )
   );

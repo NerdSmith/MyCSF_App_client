@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/map.dart';
 
+import 'components/loadingimage.dart';
+
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
 
@@ -245,7 +247,7 @@ class _MapViewState extends State<MapView> {
                     child:
                       currUrl == null ?
                         Image.asset("assets/map/NO_IMAGE.png") :
-                        Image.network(currUrl!)
+                        LoadingImageWidget(imageUrl: currUrl!)
                   ),
                 ),
               ),
@@ -266,7 +268,7 @@ class _MapViewState extends State<MapView> {
                     },
                     child: Image.asset(
                       'assets/map/layer_select.png',
-                      width: 150,
+                      width: 100,
                       height: 70,
                     ),
                   ),
