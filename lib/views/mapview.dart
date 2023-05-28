@@ -12,41 +12,45 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   bool _isListOpen = false;
-  Map<String, String> buildingsRu = {};
-  List<MyMap>? maps;
-  String selectedKey = "m";// MAIN BUILDING
-  int? selectedLayer;
-  String? currUrl;
+  Map<String, String> _buildingsRu = {};
+  Key _childKey = UniqueKey();
+  List<MyMap>? _maps;
+  String _selectedKey = "m"; // MAIN BUILDING
+  int? _selectedLayer;
+  String? _currUrl;
+
+  void _resetChildKey() {
+    setState(() {
+      _childKey = UniqueKey();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     MapController.getRuBuildings().then((value) {
       setState(() {
-        buildingsRu = value;
+        _buildingsRu = value;
       });
-      MapController.getMapsByBuilding(selectedKey).then(
-              (value) {
-            setState(() {
-              maps = value;
-            });
-            if (maps != null) {
-              int minLayer = maps!.reduce((value, element) =>
-              element.buildingLevel < value.buildingLevel ? element : value
-              ).buildingLevel;
-              setState(() {
-                selectedLayer = minLayer;
-              });
-              String? newUrl = getImageUrl(maps, selectedKey, minLayer);
-              setState(() {
-                currUrl = newUrl;
-              });
-              // print("$maps, $selectedKey, $selectedLayer, $newUrl");
-            }
-
-          }
-      );
-
+      MapController.getMapsByBuilding(_selectedKey).then((value) {
+        setState(() {
+          _maps = value;
+        });
+        if (_maps != null) {
+          int minLayer = _maps!
+              .reduce((value, element) =>
+                  element.buildingLevel < value.buildingLevel ? element : value)
+              .buildingLevel;
+          setState(() {
+            _selectedLayer = minLayer;
+          });
+          String? newUrl = getImageUrl(_maps, _selectedKey, minLayer);
+          setState(() {
+            _currUrl = newUrl;
+          });
+          // print("$maps, $selectedKey, $selectedLayer, $newUrl");
+        }
+      });
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -66,19 +70,19 @@ class _MapViewState extends State<MapView> {
         .toList();
 
     if (filteredValues.isEmpty) {
-      return objects.reduce((minObject, currentObject) =>
-        currentObject.buildingLevel < minObject.buildingLevel ?
-        currentObject :
-        minObject
-      ).buildingLevel;
+      return objects
+          .reduce((minObject, currentObject) =>
+              currentObject.buildingLevel < minObject.buildingLevel
+                  ? currentObject
+                  : minObject)
+          .buildingLevel;
     }
 
     int nextValue = filteredValues.fold(
         objects
             .map((object) => object.buildingLevel)
             .reduce((minValue, value) => minValue > value ? minValue : value),
-            (minValue, value) => minValue < value ? minValue : value
-    );
+        (minValue, value) => minValue < value ? minValue : value);
     return nextValue;
   }
 
@@ -88,16 +92,14 @@ class _MapViewState extends State<MapView> {
       return null;
     }
     try {
-      MyMap? foundObj = maps.firstWhere(
-              (object) => object.building == building && object.buildingLevel == selectedLayer
+      MyMap? foundObj = maps.firstWhere((object) =>
+          object.building == building && object.buildingLevel == selectedLayer
       );
       return foundObj.mapFile;
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
     }
     return null;
-
   }
 
   Widget _makeButton(
@@ -132,8 +134,7 @@ class _MapViewState extends State<MapView> {
               textAlign: TextAlign.left,
             ),
           ),
-        )
-        )
+        ))
       ],
     );
   }
@@ -146,167 +147,150 @@ class _MapViewState extends State<MapView> {
             child: SingleChildScrollView(
                 child: Center(
                     child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 0),
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, top: 10, bottom: 0),
                         child: _makeButton(
-                            text:
-                              buildingsRu.isEmpty ?
-                              "" :
-                              "${buildingsRu[selectedKey]} $selectedLayer этаж",
+                            text: _buildingsRu.isEmpty
+                                ? ""
+                                : "${_buildingsRu[_selectedKey]} $_selectedLayer этаж",
                             paddingBottom: 10,
                             f: () {
                               setState(() {
                                 _isListOpen = !_isListOpen;
                               });
-                            }
-                            )
-                    )
-                )
-            )
-        ),
+                            }))))),
         const Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 25
-            ),
-          child: Divider(color: Colors.black,),
-        ),
-        if (_isListOpen)
-        Container(
-          constraints: const BoxConstraints(
-            maxHeight: 300,
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          child: Divider(
+            color: Colors.black,
           ),
-          child: SingleChildScrollView(
-              child: Center(
-                  child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, top: 0),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            for (var currBuilding in buildingsRu.entries)
-                              _makeButton(
-                                  text: currBuilding.value,
-                                  f: () {
-                                    if (selectedKey != currBuilding.key) {
-                                      setState(() {
-                                        selectedKey = currBuilding.key;
-                                      });
-                                      MapController.getMapsByBuilding(selectedKey).then(
-                                              (value) {
+        ),
+        AnimatedCrossFade(
+            firstChild: Container(
+              constraints: const BoxConstraints(
+                maxHeight: 300,
+              ),
+              child: SingleChildScrollView(
+                  child: Center(
+                      child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 0),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                for (var currBuilding in _buildingsRu.entries)
+                                  _makeButton(
+                                      text: currBuilding.value,
+                                      f: () {
+                                        if (_selectedKey != currBuilding.key) {
+                                          setState(() {
+                                            _selectedKey = currBuilding.key;
+                                          });
+                                          MapController.getMapsByBuilding(
+                                                  _selectedKey)
+                                              .then((value) {
                                             setState(() {
-                                              maps = value;
+                                              _maps = value;
                                             });
-                                            if (maps != null) {
-                                              int minLayer = maps!.reduce((value, element) =>
-                                              element.buildingLevel < value.buildingLevel ? element : value
-                                              ).buildingLevel;
+                                            if (_maps != null) {
+                                              int minLayer = _maps!
+                                                  .reduce((value, element) =>
+                                                      element.buildingLevel <
+                                                              value
+                                                                  .buildingLevel
+                                                          ? element
+                                                          : value)
+                                                  .buildingLevel;
                                               setState(() {
-                                                selectedLayer = minLayer;
+                                                _selectedLayer = minLayer;
                                               });
-                                              String? newUrl = getImageUrl(maps, selectedKey, minLayer);
+                                              String? newUrl = getImageUrl(
+                                                  _maps,
+                                                  _selectedKey,
+                                                  minLayer);
                                               setState(() {
-                                                currUrl = newUrl;
+                                                _currUrl = newUrl;
                                               });
                                               // print("$maps, $selectedKey, $selectedLayer, $newUrl");
                                             }
-                                          }
-                                      ).catchError((error) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text('Ошибка загрузки данных: $error'),
-                                          ),
-                                        );
-                                      });
-                                      String? newUrl = getImageUrl(maps, selectedKey, selectedLayer);
-                                      setState(() {
-                                        currUrl = newUrl;
-                                      });
-                                    }
-                                  },
-                                  paddingLeft: 40,
-                                  paddingRight: 40
-                              ),
-                            const Divider(color: Colors.black,),
-                          ]
-                      )
-                  )
-              )
-          ),
-        ),
+                                          }).catchError((error) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'Ошибка загрузки данных: $error'),
+                                              ),
+                                            );
+                                          });
+                                          String? newUrl = getImageUrl(_maps,
+                                              _selectedKey, _selectedLayer);
+                                          setState(() {
+                                            _currUrl = newUrl;
+                                          });
+                                          _resetChildKey();
+                                        }
+                                      },
+                                      paddingLeft: 40,
+                                      paddingRight: 40),
+                                const Divider(
+                                  color: Colors.black,
+                                ),
+                              ])))),
+            ),
+            secondChild: Container(),
+            crossFadeState: _isListOpen
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 300)),
         Expanded(
           child: Container(
               child: Stack(
             children: [
               Center(
                 child: InteractiveViewer(
-                  boundaryMargin: const EdgeInsets.all(20),
+                  key: _childKey,
+                  boundaryMargin: const EdgeInsets.all(50),
                   minScale: 0.1,
                   maxScale: 4.0,
                   child: Container(
-                    constraints: BoxConstraints.expand(),
-                    child:
-                      currUrl == null ?
-                        Image.asset("assets/map/NO_IMAGE.png") :
-                        LoadingImageWidget(imageUrl: currUrl!)
-                  ),
+                      constraints: BoxConstraints.expand(),
+                      child: _currUrl == null
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                              color: Color(0xFFD9D9D9),
+                            ))
+                          : LoadingImageWidget(imageUrl: _currUrl!)),
                 ),
               ),
               Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 20, bottom: 20),
-                  child: GestureDetector(
-                    onTap: () {
-                      int? nextLayer = getNextLayer(maps, selectedLayer);
-                      setState(() {
-                        selectedLayer = nextLayer;
-                      });
-                      String? newUrl = getImageUrl(maps, selectedKey, nextLayer);
-                      setState(() {
-                        currUrl = newUrl;
-                      });
-                    },
-                    child: Image.asset(
-                      'assets/map/layer_select.png',
-                      width: 100,
-                      height: 70,
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 20, bottom: 20),
+                    child: GestureDetector(
+                      onTap: () {
+                        int? nextLayer = getNextLayer(_maps, _selectedLayer);
+                        setState(() {
+                          _selectedLayer = nextLayer;
+                          _isListOpen = false;
+                        });
+                        String? newUrl =
+                            getImageUrl(_maps, _selectedKey, nextLayer);
+                        setState(() {
+                          _currUrl = newUrl;
+                        });
+                        _resetChildKey();
+                      },
+                      child: Image.asset(
+                        'assets/map/layer_select.png',
+                        width: 100,
+                        height: 70,
+                      ),
                     ),
-                  ),
-                )
-              ),
+                  )),
             ],
           )),
         ),
       ],
     );
   }
-//   Stack(
-//   children: [
-//     Center(
-//       child: InteractiveViewer(
-//         boundaryMargin: const EdgeInsets.all(20),
-//         minScale: 0.1,
-//         maxScale: 4.0,
-//         child: Container(
-//           constraints: BoxConstraints.expand(),
-//           child: Image.asset(
-//             "assets/example.png",
-//           ),
-//         ),
-//       ),
-//     ),
-//     Align(
-//       alignment: Alignment.bottomRight,
-//       child: Padding(
-//         padding: EdgeInsets.all(16.0),
-//         child: ElevatedButton(
-//           onPressed: () {
-//             // Button onPressed action
-//           },
-//           child: Text('Button'),
-//         ),
-//       ),
-//     ),
-//   ],
-// );
 }

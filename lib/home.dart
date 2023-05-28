@@ -14,6 +14,8 @@ import 'package:mycsf_app_client/views/profileview.dart';
 import 'package:mycsf_app_client/views/settingsview.dart';
 import 'package:mycsf_app_client/views/signupview.dart';
 
+import 'api/user.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -23,17 +25,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedViewIdx = -1;
-  String? _avatarUrl;
+  User? _user;
+  Role? _currentRole;
 
   Function setNewViewIdx(int index) {
     return () {
-      AvatarService.fetchAvatar().then((value) {
-        if (_avatarUrl != value) {
-          setState(() {
-            _avatarUrl = value;
-          });
-        }
-      });
       setState(() {
         _selectedViewIdx = index;
       });
@@ -42,22 +38,14 @@ class _HomeState extends State<Home> {
   }
 
   void setNewViewIdx4Bottom(int index) {
-    AvatarService.fetchAvatar().then((value) {
-      if (_avatarUrl != value) {
-        setState(() {
-          _avatarUrl = value;
-        });
-      }
-    });
     setState(() {
       _selectedViewIdx = index;
     });
   }
 
   var _screens = [];
-
   home() {
-    return HomeView();
+    return HomeView(); // idx = -1
   }
 
   @override
@@ -72,7 +60,9 @@ class _HomeState extends State<Home> {
         () => SignUpView(onSuccess: () {
               setNewViewIdx4Bottom(-1);
             }), // 1
-        () => ProfileView(), // 2
+        () => ProfileView(forceUpdateUser: () {
+          userUpdate();
+        }), // 2
         () => MoodleView(redirectToLogin: () {
               setNewViewIdx4Bottom(0);
             }), // 3
@@ -80,10 +70,10 @@ class _HomeState extends State<Home> {
               setNewViewIdx4Bottom(0);
             }), // 4
         () => MapView(), // 5
-        const NullView("Schedule"), // 6
-        const NullView("Calendar"), // 7
-        const NullView("AI"), // 8
-        const NullView("Chat"), // 9
+        () => NullView("Schedule"), // 6
+        () => NullView("Calendar"), // 7
+        () => NullView("AI"), // 8
+        () => NullView("Chat"), // 9
         () => SettingsView(
               setHome: () {
                 setNewViewIdx4Bottom(-1);
@@ -91,10 +81,21 @@ class _HomeState extends State<Home> {
             ) // 10
       ];
     });
-    AvatarService.fetchAvatar().then((value) {
-      if (_avatarUrl != value) {
-        setState(() {
-          _avatarUrl = value;
+    userUpdate();
+  }
+
+  userUpdate() {
+    Auth.getCurrentRole().then((value) {
+      setState(() {
+        _currentRole = value;
+      });
+      if (value != Role.unauthorized) {
+        Auth.getUserInfo().then((value) {
+          setState(() {
+            if (_user != value) {
+              _user = value;
+            }
+          });
         });
       }
     });
@@ -102,14 +103,25 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedView =
-        (_selectedViewIdx != -1) ? _screens[_selectedViewIdx] : home;
+    dynamic selectedView;
+    switch (_selectedViewIdx) {
+      case -1:
+        selectedView = home;
+        break;
+      default:
+        selectedView = _screens[_selectedViewIdx];
+        break;
+    }
 
     return Scaffold(
-      drawer: NavDrawer(onTileTap: setNewViewIdx),
+      drawer: NavDrawer(
+        onTileTap: setNewViewIdx,
+        user: _user,
+        currentRole: _currentRole,
+      ),
       bottomNavigationBar: NavDrawerBottom(
           onTileTap: setNewViewIdx4Bottom, selectedIdx: _selectedViewIdx),
-      appBar: MyAppBar(avatarUrl: _avatarUrl),
+      appBar: MyAppBar(avatarUrl: _user?.avatar),
       body: selectedView(),
     );
   }
