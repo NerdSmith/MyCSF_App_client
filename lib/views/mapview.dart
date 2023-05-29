@@ -158,8 +158,7 @@ class _MapViewState extends State<MapView> {
                             child: CircularProgressIndicator(
                             color: Color(0xFFD9D9D9),
                           ))
-                        : LoadingImageWidget(imageUrl: _currUrl!)
-                    ),
+                        : LoadingImageWidget(imageUrl: _currUrl!)),
               ),
             ),
             Align(
@@ -190,116 +189,133 @@ class _MapViewState extends State<MapView> {
           ],
         )
         ),
-        Column(
-          children: [
-            Container(
-              color: Colors.white,
-                child: SingleChildScrollView(
-                    child: Center(
-                        child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 10, bottom: 0),
-                            child: _makeButton(
-                                text: _buildingsRu.isEmpty
-                                    ? ""
-                                    : "${_buildingsRu[_selectedKey]} $_selectedLayer этаж",
-                                paddingBottom: 10,
-                                f: () {
-                                  setState(() {
-                                    _isListOpen = !_isListOpen;
-                                  });
-                                }))))),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Divider(
-                color: Colors.black,
-              ),
-            ),
-            AnimatedCrossFade(
-                firstChild: Container(
-                  color: Colors.white,
-                  constraints: const BoxConstraints(
-                    maxHeight: 300,
-                  ),
+        Container(
+          decoration: const BoxDecoration(
+              color: Colors.white
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  color: Colors.transparent,
                   child: SingleChildScrollView(
                       child: Center(
                           child: Padding(
                               padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 0),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    for (var currBuilding
-                                        in _buildingsRu.entries)
-                                      _makeButton(
-                                          text: currBuilding.value,
-                                          f: () {
-                                            if (_selectedKey !=
-                                                currBuilding.key) {
-                                              setState(() {
-                                                _selectedKey = currBuilding.key;
-                                              });
-                                              MapController.getMapsByBuilding(
-                                                      _selectedKey)
-                                                  .then((value) {
+                                  left: 20, right: 20, top: 10, bottom: 0),
+                              child: _makeButton(
+                                  text: _buildingsRu.isEmpty
+                                      ? ""
+                                      : "${_buildingsRu[_selectedKey]} $_selectedLayer этаж",
+                                  paddingBottom: 10,
+                                  f: () {
+                                    setState(() {
+                                      _isListOpen = !_isListOpen;
+                                    });
+                                  }))))),
+              Padding(
+                  padding: EdgeInsets.only(left: 25, right: 25, bottom: 0),
+                  child: Container(
+                    // color: Colors.white,
+                    decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                            bottom: BorderSide(color: Colors.black, width: 1.0))),
+                  )
+              ),
+              AnimatedCrossFade(
+                  firstChild: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                            bottom: BorderSide(color: Colors.black, width: 1.0))),
+                    // color: Colors.white,
+                    constraints: const BoxConstraints(
+                      maxHeight: 300,
+                    ),
+                    child: SingleChildScrollView(
+                        child: Center(
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 0),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 10,),
+                                      for (var currBuilding
+                                      in _buildingsRu.entries)
+                                        _makeButton(
+                                            text: currBuilding.value,
+                                            f: () {
+                                              if (_selectedKey !=
+                                                  currBuilding.key) {
                                                 setState(() {
-                                                  _maps = value;
+                                                  _selectedKey = currBuilding.key;
                                                 });
-                                                if (_maps != null) {
-                                                  int minLayer = _maps!
-                                                      .reduce((value,
-                                                              element) =>
-                                                          element.buildingLevel <
-                                                                  value
-                                                                      .buildingLevel
-                                                              ? element
-                                                              : value)
-                                                      .buildingLevel;
+                                                MapController.getMapsByBuilding(
+                                                    _selectedKey)
+                                                    .then((value) {
                                                   setState(() {
-                                                    _selectedLayer = minLayer;
+                                                    _maps = value;
                                                   });
-                                                  String? newUrl = getImageUrl(
-                                                      _maps,
-                                                      _selectedKey,
-                                                      minLayer);
-                                                  setState(() {
-                                                    _currUrl = newUrl;
-                                                  });
-                                                  // print("$maps, $selectedKey, $selectedLayer, $newUrl");
-                                                }
-                                              }).catchError((error) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        'Ошибка загрузки данных: $error'),
-                                                  ),
-                                                );
-                                              });
-                                              String? newUrl = getImageUrl(
-                                                  _maps,
-                                                  _selectedKey,
-                                                  _selectedLayer);
-                                              setState(() {
-                                                _currUrl = newUrl;
-                                              });
-                                              _resetChildKey();
-                                            }
-                                          },
-                                          paddingLeft: 40,
-                                          paddingRight: 40),
-                                    const Divider(
-                                      color: Colors.black,
-                                    ),
-                                  ])))),
-                ),
-                secondChild: Container(),
-                crossFadeState: _isListOpen
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                duration: const Duration(milliseconds: 300)),
-          ],
+                                                  if (_maps != null) {
+                                                    int minLayer = _maps!
+                                                        .reduce((value,
+                                                        element) =>
+                                                    element.buildingLevel <
+                                                        value
+                                                            .buildingLevel
+                                                        ? element
+                                                        : value)
+                                                        .buildingLevel;
+                                                    setState(() {
+                                                      _selectedLayer = minLayer;
+                                                    });
+                                                    String? newUrl = getImageUrl(
+                                                        _maps,
+                                                        _selectedKey,
+                                                        minLayer);
+                                                    setState(() {
+                                                      _currUrl = newUrl;
+                                                    });
+                                                    // print("$maps, $selectedKey, $selectedLayer, $newUrl");
+                                                  }
+                                                }).catchError((error) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'Ошибка загрузки данных: $error'),
+                                                    ),
+                                                  );
+                                                });
+                                                String? newUrl = getImageUrl(
+                                                    _maps,
+                                                    _selectedKey,
+                                                    _selectedLayer);
+                                                setState(() {
+                                                  _currUrl = newUrl;
+                                                });
+                                                _resetChildKey();
+                                              }
+                                            },
+                                            paddingLeft: 40,
+                                            paddingRight: 40),
+                                    ]
+                                )
+                            )
+                        )
+                    ),
+                  ),
+                  secondChild: Container(),
+                  crossFadeState: _isListOpen
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  duration: const Duration(milliseconds: 300)),
+            ],
+          ),
         ),
+
       ],
     );
   }
