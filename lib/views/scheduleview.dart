@@ -254,7 +254,7 @@ class _ScheduleViewState extends State<ScheduleView> {
           Column(
             children: [
               Container(
-                  color: Colors.white,
+                  color: Colors.transparent,
                   child: SingleChildScrollView(
                       child: Center(
                           child: Padding(
@@ -271,7 +271,7 @@ class _ScheduleViewState extends State<ScheduleView> {
               Padding(
                   padding: EdgeInsets.only(left: 25, right: 25, bottom: 10),
                   child: Container(
-                    color: Colors.white,
+                    color: Colors.transparent,
                     child: Divider(
                       color: Colors.black,
                     ),

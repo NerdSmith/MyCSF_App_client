@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:mycsf_app_client/api/apiconfig.dart';
 import 'package:mycsf_app_client/api/auth.dart';

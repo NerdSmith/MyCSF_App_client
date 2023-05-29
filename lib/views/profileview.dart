@@ -97,6 +97,7 @@ class _ProfileViewState extends State<ProfileView> {
                           content: Text('Аватар изменен'),
                         ),
                       );
+                    }).then((value) {
                       widget.forceUpdateUser();
                     }).catchError((err) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,6 +118,7 @@ class _ProfileViewState extends State<ProfileView> {
                         )
                       : const CircleAvatar(
                           radius: 60,
+                          backgroundColor: Colors.transparent,
                           backgroundImage:
                               AssetImage('assets/user_avatar_small.png'),
                         )),
@@ -221,6 +223,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       content: Text('Данные изменены'),
                                     ),
                                   );
+                                  widget.forceUpdateUser();
                                 }).catchError((err) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
