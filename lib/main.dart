@@ -38,6 +38,12 @@ ThemeData _createTheme() {
           color: Colors.black,
           fontSize: 8.0,
         ),
+        headlineMedium: TextStyle(
+          fontFamily: 'Montserrat',
+          color: Colors.black,
+          fontStyle: FontStyle.italic,
+          fontSize: 24.0,
+        ),
         displayLarge: TextStyle(
           fontFamily: 'Montserrat',
           color: Colors.black,

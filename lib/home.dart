@@ -11,6 +11,7 @@ import 'package:mycsf_app_client/views/mapview.dart';
 import 'package:mycsf_app_client/views/moodleview.dart';
 import 'package:mycsf_app_client/views/nullview.dart';
 import 'package:mycsf_app_client/views/profileview.dart';
+import 'package:mycsf_app_client/views/scheduleview.dart';
 import 'package:mycsf_app_client/views/settingsview.dart';
 import 'package:mycsf_app_client/views/signupview.dart';
 
@@ -70,7 +71,9 @@ class _HomeState extends State<Home> {
               setNewViewIdx4Bottom(0);
             }), // 4
         () => MapView(), // 5
-        () => NullView("Schedule"), // 6
+        () => ScheduleView(redirectToLogin: () {
+          setNewViewIdx4Bottom(0);
+        }), // 6
         () => NullView("Calendar"), // 7
         () => NullView("AI"), // 8
         () => NullView("Chat"), // 9

@@ -19,11 +19,11 @@ class _BrsViewState extends State<BrsView> {
   @override
   void initState() {
     super.initState();
-    Auth.getCurrentRole().then((value) {
-      if (value == Role.unauthorized) {
-        widget.redirectToLogin();
-      }
-    });
+    // Auth.getCurrentRole().then((value) {
+    //   if (value == Role.unauthorized) {
+    //     widget.redirectToLogin();
+    //   }
+    // });
   }
 
   void _fillFormFields() {

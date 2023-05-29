@@ -158,8 +158,7 @@ class _MapViewState extends State<MapView> {
                             child: CircularProgressIndicator(
                             color: Color(0xFFD9D9D9),
                           ))
-                        : LoadingImageWidget(imageUrl: _currUrl!)
-                    ),
+                        : LoadingImageWidget(imageUrl: _currUrl!)),
               ),
             ),
             Align(
@@ -188,12 +187,11 @@ class _MapViewState extends State<MapView> {
                   ),
                 )),
           ],
-        )
-        ),
+        )),
         Column(
           children: [
             Container(
-              color: Colors.white,
+                color: Colors.white,
                 child: SingleChildScrollView(
                     child: Center(
                         child: Padding(
@@ -209,15 +207,22 @@ class _MapViewState extends State<MapView> {
                                     _isListOpen = !_isListOpen;
                                   });
                                 }))))),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Divider(
-                color: Colors.black,
-              ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, bottom: 10),
+              child: Container(
+                color: Colors.white,
+                child: Divider(
+                  color: Colors.black,
+                ),
+              )
             ),
             AnimatedCrossFade(
                 firstChild: Container(
-                  color: Colors.white,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                          bottom: BorderSide(color: Colors.black, width: 1.0))),
+                  // color: Colors.white,
                   constraints: const BoxConstraints(
                     maxHeight: 300,
                   ),
@@ -288,10 +293,18 @@ class _MapViewState extends State<MapView> {
                                           },
                                           paddingLeft: 40,
                                           paddingRight: 40),
-                                    const Divider(
-                                      color: Colors.black,
-                                    ),
-                                  ])))),
+                                    // const Padding(
+                                    //   padding:
+                                    //       EdgeInsets.symmetric(horizontal: 0),
+                                    //   child: Divider(
+                                    //     color: Colors.black,
+                                    //   ),
+                                    // ),
+                                  ]
+                              )
+                          )
+                      )
+                  ),
                 ),
                 secondChild: Container(),
                 crossFadeState: _isListOpen
