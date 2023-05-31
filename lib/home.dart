@@ -56,12 +56,21 @@ class _HomeState extends State<Home> {
     Auth.performAuthCheck();
     setState(() {
       _screens = [
-        () => LoginView(onSuccess: () {
+        () => LoginView(
+            onSuccess: () {
               setNewViewIdx4Bottom(-1);
-            }), // 0
+            },
+            forceUpdateUser: () {
+              userUpdate();
+            }
+            ), // 0
         () => SignUpView(onSuccess: () {
               setNewViewIdx4Bottom(-1);
-            }), // 1
+            },
+            forceUpdateUser: () {
+              userUpdate();
+            }
+        ), // 1
         () => ProfileView(forceUpdateUser: () {
           userUpdate();
         }), // 2
@@ -79,6 +88,9 @@ class _HomeState extends State<Home> {
         () => NullView("AI"), // 8
         () => NullView("Chat"), // 9
         () => SettingsView(
+              forceUpdateUser: () {
+                userUpdate();
+              },
               setHome: () {
                 setNewViewIdx4Bottom(-1);
               },
@@ -101,6 +113,9 @@ class _HomeState extends State<Home> {
             }
           });
         });
+      }
+      else {
+        _user = null;
       }
     });
   }

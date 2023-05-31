@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mycsf_app_client/api/myevent.dart';
+import 'package:mycsf_app_client/views/eventview.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 
@@ -24,6 +25,15 @@ class _MyCalendarViewState extends State<MyCalendarView> {
     });
   }
 
+  void openEventPage(MyEvent event) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventView(event: event),
+      ),
+    );
+  }
+
   onItemTap(CalendarTapDetails details) {
     List? appointment = details.appointments;
     DateTime date = details.date!;
@@ -32,6 +42,7 @@ class _MyCalendarViewState extends State<MyCalendarView> {
 
     if (element == CalendarElement.appointment && appointment!.isNotEmpty) {
       print("app");
+      openEventPage(appointment.first);
     }
   }
 
