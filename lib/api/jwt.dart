@@ -22,11 +22,8 @@ class Jwt {
       final access = body['access'];
       await _saveAccess(access);
       await _saveRefresh(refresh);
-      Auth.getRole().then((value) {
-        Auth.setRole(
-            value
-        );
-      });
+      var role = await Auth.getRole();
+      await Auth.setRole(role);
       return access;
     }
     else {

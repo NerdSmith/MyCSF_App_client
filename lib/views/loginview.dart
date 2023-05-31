@@ -4,8 +4,9 @@ import 'package:mycsf_app_client/api/jwt.dart';
 
 class LoginView extends StatefulWidget {
   Function onSuccess;
+  Function forceUpdateUser;
 
-  LoginView({Key? key, required this.onSuccess}) : super(key: key);
+  LoginView({Key? key, required this.onSuccess, required this.forceUpdateUser}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -124,6 +125,7 @@ class _LoginViewState extends State<LoginView> {
                                   );
                                   Future.delayed(const Duration(seconds: 1));
                                   widget.onSuccess();
+                                  widget.forceUpdateUser();
                                 }).catchError((error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(

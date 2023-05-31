@@ -7,8 +7,9 @@ import 'package:mycsf_app_client/webview_services/moodleclaims.dart';
 
 class SettingsView extends StatefulWidget {
   Function setHome;
+  Function forceUpdateUser;
 
-  SettingsView({Key? key, required this.setHome}) : super(key: key);
+  SettingsView({Key? key, required this.setHome, required this.forceUpdateUser}) : super(key: key);
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -283,6 +284,7 @@ class _SettingsViewState extends State<SettingsView> {
                             setState(() {
                               _isUnauthorized = true;
                             });
+                            widget.forceUpdateUser();
                           }
                         ),
                       ],

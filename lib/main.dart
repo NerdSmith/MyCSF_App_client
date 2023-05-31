@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mycsf_app_client/home.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        SfGlobalLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('ru'),
+      ],
       title: 'My SCF',
       theme: _createTheme(),
       home: const Home()

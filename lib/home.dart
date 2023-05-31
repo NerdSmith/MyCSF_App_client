@@ -5,6 +5,7 @@ import 'package:mycsf_app_client/appbar.dart';
 import 'package:mycsf_app_client/drawer.dart';
 import 'package:mycsf_app_client/drawerbottom.dart';
 import 'package:mycsf_app_client/views/brsview.dart';
+import 'package:mycsf_app_client/views/calendarview.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
 import 'package:mycsf_app_client/views/mapview.dart';
@@ -55,12 +56,21 @@ class _HomeState extends State<Home> {
     Auth.performAuthCheck();
     setState(() {
       _screens = [
-        () => LoginView(onSuccess: () {
+        () => LoginView(
+            onSuccess: () {
               setNewViewIdx4Bottom(-1);
-            }), // 0
+            },
+            forceUpdateUser: () {
+              userUpdate();
+            }
+            ), // 0
         () => SignUpView(onSuccess: () {
               setNewViewIdx4Bottom(-1);
-            }), // 1
+            },
+            forceUpdateUser: () {
+              userUpdate();
+            }
+        ), // 1
         () => ProfileView(forceUpdateUser: () {
           userUpdate();
         }), // 2
@@ -74,10 +84,13 @@ class _HomeState extends State<Home> {
         () => ScheduleView(redirectToLogin: () {
           setNewViewIdx4Bottom(0);
         }), // 6
-        () => NullView("Calendar"), // 7
+        () => MyCalendarView(), // 7
         () => NullView("AI"), // 8
         () => NullView("Chat"), // 9
         () => SettingsView(
+              forceUpdateUser: () {
+                userUpdate();
+              },
               setHome: () {
                 setNewViewIdx4Bottom(-1);
               },
@@ -100,6 +113,9 @@ class _HomeState extends State<Home> {
             }
           });
         });
+      }
+      else {
+        _user = null;
       }
     });
   }

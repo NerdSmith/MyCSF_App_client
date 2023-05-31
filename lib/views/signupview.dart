@@ -12,8 +12,9 @@ import 'package:mycsf_app_client/api/userrole.dart';
 
 class SignUpView extends StatefulWidget {
   Function onSuccess;
+  Function forceUpdateUser;
 
-  SignUpView({Key? key, required this.onSuccess}) : super(key: key);
+  SignUpView({Key? key, required this.onSuccess, required this.forceUpdateUser}) : super(key: key);
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
@@ -353,6 +354,7 @@ class _SignUpViewState extends State<SignUpView>
                                   .then((value) {
                                 Future.delayed(const Duration(seconds: 1));
                                 widget.onSuccess();
+                                widget.forceUpdateUser();
                               }).catchError((error) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
