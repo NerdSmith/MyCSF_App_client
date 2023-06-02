@@ -84,6 +84,7 @@ class Auth {
       return User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     }
     else {
+      await performLogout();
       throw Exception("Cant receive User obj");
     }
   }

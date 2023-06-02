@@ -27,6 +27,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   String _week = "";
   bool _isListOpen = false;
   bool _fullMode = false;
+  bool _render = false;
 
   _getCurrentScheduleByWeek(String week) {
     ScheduleController.getScheduleByWeek(week).then((value) {
@@ -71,6 +72,9 @@ class _ScheduleViewState extends State<ScheduleView> {
       } else {
         _getCurrentScheduleByDate();
         _getCurrentWeekByDate();
+        setState(() {
+          _render = true;
+        });
       }
     });
   }
@@ -248,7 +252,7 @@ class _ScheduleViewState extends State<ScheduleView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return _render ? SingleChildScrollView(
       child: Column(
         children: [
           Column(
@@ -365,6 +369,6 @@ class _ScheduleViewState extends State<ScheduleView> {
               ))
         ],
       ),
-    );
+    ) : Container();
   }
 }

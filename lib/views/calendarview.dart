@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/api/myevent.dart';
 import 'package:mycsf_app_client/views/eventview.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 
 class MyCalendarView extends StatefulWidget {
-  const MyCalendarView({Key? key}) : super(key: key);
+  final Function redirectToLogin;
+
+  const MyCalendarView({Key? key, required this.redirectToLogin}) : super(key: key);
 
   @override
   State<MyCalendarView> createState() => _MyCalendarViewState();
@@ -14,15 +17,24 @@ class MyCalendarView extends StatefulWidget {
 
 class _MyCalendarViewState extends State<MyCalendarView> {
   List<MyEvent> events = [];
+  bool _render = false;
 
   @override
   void initState() {
     super.initState();
-    EventController.fetchAll4CurrUser().then((value) {
-      setState(() {
-        events = value;
-      });
+    Auth.getCurrentRole().then((value) {
+      if (value == Role.unauthorized) {
+        widget.redirectToLogin();
+      } else {
+        EventController.fetchAll4CurrUser().then((value) {
+          setState(() {
+            _render = true;
+            events = value;
+          });
+        });
+      }
     });
+
   }
 
   void openEventPage(MyEvent event) {
@@ -48,7 +60,7 @@ class _MyCalendarViewState extends State<MyCalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return _render ? Container(
       child: SfCalendar(
         headerStyle: CalendarHeaderStyle(
           textAlign: TextAlign.center
@@ -65,7 +77,7 @@ class _MyCalendarViewState extends State<MyCalendarView> {
           showAgenda: true,
         ),
       ),
-    );
+    ) : Container();
   }
 
   CalendarDataSource<MyEvent> _getCalendarDataSource() {

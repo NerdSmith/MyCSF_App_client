@@ -86,7 +86,7 @@ class EventController {
       return events;
     }
     else {
-      throw Exception("Cant receive maps");
+      throw Exception("Cant receive events");
     }
   }
 }
