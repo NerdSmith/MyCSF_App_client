@@ -30,9 +30,11 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     super.initState();
-    Auth.isUnauthorized().then((value) => setState(() {
-          _isUnauthorized = value;
-        }));
+    Auth.isUnauthorized().then((value) {
+      setState(() {
+        _isUnauthorized = value;
+      });
+    });
     BrsClaims().getLogPassClaims().then((value) {
       if (value != null) {
         setState(() {

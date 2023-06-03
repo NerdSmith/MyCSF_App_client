@@ -48,7 +48,11 @@ class _HomeState extends State<Home> {
 
   var _screens = [];
   home() {
-    return PublicationsView(); // idx = -1
+    return PublicationsView(
+      redirectToCalendar: () {
+        setNewViewIdx4Bottom(7);
+      },
+    ); // idx = -1
   }
 
   @override

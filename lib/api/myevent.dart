@@ -51,9 +51,9 @@ class MyEvent {
 }
 
 class EventController {
-  static Future<List<MyEvent>> fetchAll4CurrUser() async {
+  static Future<MyEvent> getEventById(int id) async {
     var headers = {
-    'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
     };
 
     try {
@@ -65,7 +65,49 @@ class EventController {
     }
 
     final response = await http.get(
-      Uri.parse('$apiUrl/api/event/'),
+        Uri.parse('$apiUrl/api/event/$id'),
+        headers: headers
+    );
+
+    if (response.statusCode == 200) {
+      var decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      return MyEvent(
+          title: decoded["title"],
+          description: decoded["description"],
+          eventStartDatetime: decoded["event_start_datetime"],
+          eventEndDatetime: decoded["event_end_datetime"],
+          isFullDay: decoded["is_full_day"],
+          eType: decoded["e_type"]
+      );
+    }
+    else {
+      throw Exception("Cant receive event");
+    }
+  }
+
+
+  static Future<List<MyEvent>> fetchAll4CurrUser({bool? latest}) async {
+    var headers = {
+    'Content-Type': 'application/json',
+    };
+
+    try {
+      var auth = await Auth.getAuthStr();
+      headers["Authorization"] = auth;
+    }
+    catch (e) {
+      print(e);
+    }
+    Uri targetUrl = Uri.parse('$apiUrl/api/event/');
+
+    if (latest != null) {
+      targetUrl = targetUrl.replace(
+          queryParameters: {"latest": latest.toString()}
+      );
+    }
+
+    final response = await http.get(
+      targetUrl,
       headers: headers
     );
     if (response.statusCode == 200) {

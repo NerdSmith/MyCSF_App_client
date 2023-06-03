@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
-import 'package:marquee/marquee.dart';
 import 'package:mycsf_app_client/api/myevent.dart';
 import 'package:mycsf_app_client/backappbar.dart';
 import 'package:url_launcher/url_launcher.dart';

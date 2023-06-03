@@ -12,7 +12,7 @@ class Publication {
   String? title;
   String? bodyText;
   String? publicationDatetime;
-  String? event;
+  int? event;
   String? image;
 
   Publication({this.title, this.bodyText, this.publicationDatetime, this.event,
@@ -59,7 +59,7 @@ class PublicationController {
 class PublicationBloc extends Cubit<List<Publication>> {
   PublicationBloc() : super([]);
   int offset = 0;
-  int limit = 3;
+  int limit = 10;
 
   Future<void> fetchPubs() async {
     try {
