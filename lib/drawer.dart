@@ -71,7 +71,7 @@ class _NavDrawerState extends State<NavDrawer> {
     if (widget.user != null && widget.user!.avatar != null) {
       return CircleAvatar(
         radius: 40,
-        backgroundImage: NetworkImage(widget.user!.avatar!),
+        backgroundImage: NetworkImage(widget.user!.avatar!  + '?random=' + DateTime.now().millisecondsSinceEpoch.toString()),
         backgroundColor: Colors.transparent,
         child: widget.user!.avatar != null ? null : CircularProgressIndicator(),
       );

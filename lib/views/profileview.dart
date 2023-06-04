@@ -100,6 +100,7 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                       );
                     }).then((value) {
+                      Future.delayed(Duration(seconds: 1));
                       widget.forceUpdateUser();
                     }).catchError((err) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -112,7 +113,7 @@ class _ProfileViewState extends State<ProfileView> {
                   child: _user != null && _user!.avatar != null
                       ? CircleAvatar(
                           radius: 60,
-                          backgroundImage: NetworkImage(_user!.avatar!),
+                          backgroundImage: NetworkImage(_user!.avatar! + '?random=' + DateTime.now().millisecondsSinceEpoch.toString()),
                           backgroundColor: Colors.transparent,
                           child: _user!.avatar != null
                               ? null

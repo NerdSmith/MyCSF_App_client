@@ -73,18 +73,24 @@ class Auth {
   }
 
   static Future<User> getUserInfo() async {
-    final response = await http.get(
-      Uri.parse('$apiUrl/api/auth/users/shortinfo/0/'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': await getAuthStr()
-      },
-    );
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl/api/auth/users/shortinfo/0/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': await getAuthStr()
+        },
+      );
+      if (response.statusCode == 200) {
+        return User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      }
+      else {
+        await performLogout();
+        throw Exception("Cant receive User obj");
+      }
     }
-    else {
-      await performLogout();
+    catch (e) {
+      performLogout();
       throw Exception("Cant receive User obj");
     }
   }

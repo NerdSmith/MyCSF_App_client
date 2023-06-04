@@ -7,6 +7,7 @@ import 'package:mycsf_app_client/drawerbottom.dart';
 import 'package:mycsf_app_client/views/brsview.dart';
 import 'package:mycsf_app_client/views/calendarview.dart';
 import 'package:mycsf_app_client/views/chatgptview.dart';
+import 'package:mycsf_app_client/views/chatlistview.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
 import 'package:mycsf_app_client/views/mapview.dart';
@@ -98,7 +99,9 @@ class _HomeState extends State<Home> {
         () => ChatGPTView(redirectToLogin: () {
           setNewViewIdx4Bottom(0);
         }), // 8
-        () => NullView("Chat"), // 9
+        () => ChatListView(redirectToLogin: () {
+          setNewViewIdx4Bottom(0);
+        }), // 9
         () => SettingsView(
               forceUpdateUser: () {
                 userUpdate();

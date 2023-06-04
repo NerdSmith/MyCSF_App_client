@@ -36,7 +36,7 @@ class _MyAppBarState extends State<MyAppBar> {
       actions: [
         widget.avatarUrl != null
             ? CircleAvatar(
-                backgroundImage: NetworkImage(widget.avatarUrl!),
+                backgroundImage: NetworkImage(widget.avatarUrl!  + '?random=' + DateTime.now().millisecondsSinceEpoch.toString()),
                 backgroundColor: Colors.transparent,
                 // Set the background color to transparent
                 child: widget.avatarUrl != null
