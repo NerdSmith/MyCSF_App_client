@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/auth.dart';
+import 'package:mycsf_app_client/views/contactsview.dart';
+import 'package:mycsf_app_client/views/infoview.dart';
 import 'package:mycsf_app_client/views/moodleview.dart';
 import 'package:mycsf_app_client/webview_services/brsclaims.dart';
 import 'package:mycsf_app_client/webview_services/logpassclaims.dart';
@@ -278,6 +280,28 @@ class _SettingsViewState extends State<SettingsView> {
                           paddingLeft: 50),
                         SizedBox(
                           height: 20,
+                        ),
+                        _makeButton(
+                            text: 'О приложении',
+                            f: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InfoView(),
+                                ),
+                              );
+                            }
+                        ),
+                        _makeButton(
+                            text: 'Контакты',
+                            f: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ContactsView(),
+                                ),
+                              );
+                            }
                         ),
                         _makeButton(
                           text: 'Выйти из аккаунта',
