@@ -6,6 +6,7 @@ import 'package:mycsf_app_client/drawer.dart';
 import 'package:mycsf_app_client/drawerbottom.dart';
 import 'package:mycsf_app_client/views/brsview.dart';
 import 'package:mycsf_app_client/views/calendarview.dart';
+import 'package:mycsf_app_client/views/chatgptview.dart';
 import 'package:mycsf_app_client/views/homeview.dart';
 import 'package:mycsf_app_client/views/loginview.dart';
 import 'package:mycsf_app_client/views/mapview.dart';
@@ -92,7 +93,9 @@ class _HomeState extends State<Home> {
         () => MyCalendarView(redirectToLogin: () {
           setNewViewIdx4Bottom(0);
         }), // 7
-        () => NullView("AI"), // 8
+        () => ChatGPTView(redirectToLogin: () {
+          setNewViewIdx4Bottom(0);
+        }), // 8
         () => NullView("Chat"), // 9
         () => SettingsView(
               forceUpdateUser: () {

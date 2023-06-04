@@ -49,7 +49,7 @@ class _SignUpViewState extends State<SignUpView>
   Widget _createFormField(String hintText, String errMsg,
       {required onSaved, bool isSecret = false}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 45, right: 45, bottom: 6),
+      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 6),
       child: SizedBox(
         height: 70,
         child: TextFormField(
@@ -146,7 +146,7 @@ class _SignUpViewState extends State<SignUpView>
               ),
               Padding(
                   padding:
-                      const EdgeInsets.only(left: 45, right: 45, bottom: 25),
+                      const EdgeInsets.only(left: 30, right: 30, bottom: 25),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(0xFFEDEDED),
@@ -204,7 +204,7 @@ class _SignUpViewState extends State<SignUpView>
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(left: 45, right: 45, bottom: 6),
+                          const EdgeInsets.only(left: 30, right: 30, bottom: 6),
                       child: SizedBox(
                         height: 70,
                         child: TypeAheadFormField(

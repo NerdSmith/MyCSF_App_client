@@ -29,17 +29,17 @@ class NavDrawer extends StatefulWidget {
   ];
 
   static final itemIcon = [
-    Image.asset("assets/menu_items/LogIn.png", height: 40),
-    Image.asset("assets/menu_items/Signup.png", height: 40),
-    Image.asset("assets/menu_items/Profile.png", height: 40),
-    Image.asset("assets/menu_items/Moodle.png", height: 40),
-    Image.asset("assets/menu_items/BRS.png", height: 40),
-    Image.asset("assets/menu_items/Map.png", height: 40),
-    Image.asset("assets/menu_items/Schedule.png", height: 40),
-    Image.asset("assets/menu_items/Calendar.png", height: 40),
-    Image.asset("assets/menu_items/AI.png", height: 40),
-    Image.asset("assets/menu_items/Chat.png", height: 40),
-    Image.asset("assets/menu_items/Settings.png", height: 40),
+    Image.asset("assets/menu_items/LogIn.png", height: 30),
+    Image.asset("assets/menu_items/Signup.png", height: 30),
+    Image.asset("assets/menu_items/Profile.png", height: 30),
+    Image.asset("assets/menu_items/Moodle.png", height: 30),
+    Image.asset("assets/menu_items/BRS.png", height: 30),
+    Image.asset("assets/menu_items/Map.png", height: 30),
+    Image.asset("assets/menu_items/Schedule.png", height: 30),
+    Image.asset("assets/menu_items/Calendar.png", height: 30),
+    Image.asset("assets/menu_items/AI.png", height: 30),
+    Image.asset("assets/menu_items/Chat.png", height: 30),
+    Image.asset("assets/menu_items/Settings.png", height: 30),
   ];
 
   @override
@@ -139,22 +139,25 @@ class _NavDrawerState extends State<NavDrawer> {
                       )),
                 ),
               Expanded(
-                  child: ListView.builder(
-                      itemCount: NavDrawer.itemText.length - 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        // cond when unauthorized
-                        if (widget.currentRole == Role.unauthorized && index == 2) {
-                          return SizedBox.shrink();
-                        }
-                        if (widget.currentRole != Role.unauthorized &&
-                            (index == 0 || index == 1)) {
-                          return SizedBox.shrink();
-                        }
-                        return AppDrawerTile(
-                          index: index,
-                          onTap: widget.onTileTap,
-                        );
-                      })),
+                  child: Container(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 0),
+                        itemCount: NavDrawer.itemText.length - 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          // cond when unauthorized
+                          if (widget.currentRole == Role.unauthorized && index == 2) {
+                            return SizedBox.shrink();
+                          }
+                          if (widget.currentRole != Role.unauthorized &&
+                              (index == 0 || index == 1)) {
+                            return SizedBox.shrink();
+                          }
+                          return AppDrawerTile(
+                            index: index,
+                            onTap: widget.onTileTap,
+                          );
+                        }),
+                  )),
               Container(
                 child: Align(
                   alignment: FractionalOffset.bottomCenter,
@@ -186,13 +189,17 @@ class AppDrawerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 10),
-      child: ListTile(
-          leading: SizedBox(width: 60, child: NavDrawer.itemIcon[index]),
-          title: Text(
-            NavDrawer.itemText[index],
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          onTap: onTap(index)),
+      child: Container(
+        height: 40,
+        child: ListTile(
+
+            leading: SizedBox(width: 60, child: NavDrawer.itemIcon[index]),
+            title: Text(
+              NavDrawer.itemText[index],
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            onTap: onTap(index)),
+      )
     );
   }
 }
