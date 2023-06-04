@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ class _ChatGPTViewState extends State<ChatGPTView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('ChatGPT Page opened');
     Auth.getCurrentRole().then((value) {
       if (value == Role.unauthorized) {
         widget.redirectToLogin();
@@ -44,11 +46,13 @@ class _ChatGPTViewState extends State<ChatGPTView> {
   }
 
   Future _scrollToBottom() async {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    if (_render) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   Future _addMessage(String content, bool isUser) async {

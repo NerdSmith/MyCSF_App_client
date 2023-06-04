@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mycsf_app_client/api/auth.dart';
@@ -22,6 +23,7 @@ class _MyCalendarViewState extends State<MyCalendarView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Calendar Page opened');
     Auth.getCurrentRole().then((value) {
       if (value == Role.unauthorized) {
         widget.redirectToLogin();

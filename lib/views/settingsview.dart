@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/views/contactsview.dart';
@@ -32,6 +33,7 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Map Page opened');
     Auth.isUnauthorized().then((value) {
       setState(() {
         _isUnauthorized = value;

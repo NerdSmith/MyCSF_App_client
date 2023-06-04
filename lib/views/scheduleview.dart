@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -65,6 +66,7 @@ class _ScheduleViewState extends State<ScheduleView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Schedule Page opened');
     initializeDateFormatting('ru', null).then((_) {});
     Auth.getCurrentRole().then((value) {
       if (value == Role.unauthorized) {

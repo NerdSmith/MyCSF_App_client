@@ -59,7 +59,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    Auth.performAuthCheck();
+    Auth.performAuthCheck().catchError((err) {
+      Auth.performLogout();
+    });
     setState(() {
       _screens = [
         () => LoginView(

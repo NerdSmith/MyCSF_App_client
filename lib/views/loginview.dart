@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/dto/logindao.dart';
 import 'package:mycsf_app_client/api/jwt.dart';
@@ -19,6 +20,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Login Page opened');
     setState(() {
       loginDao = LoginDao();
     });

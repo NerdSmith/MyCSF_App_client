@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/api/avatar.dart';
@@ -21,6 +22,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Profile Page opened');
     Auth.getUserInfo().then((value) {
       setState(() {
         _user = value;

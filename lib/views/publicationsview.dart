@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +31,7 @@ class _PublicationsViewState extends State<PublicationsView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Publications Page opened');
     _publicationBloc.fetchPubs();
     _scrollController.addListener(_scrollListener);
     EventController.fetchAll4CurrUser(latest: true).then((value) {

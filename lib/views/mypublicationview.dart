@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
@@ -24,6 +25,7 @@ class _MyPublicationViewState extends State<MyPublicationView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Publication Page opened');
     if (widget.publication.event != null) {
       EventController.getEventById(widget.publication.event!).then((value) {
         setState(() {

@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/auth.dart';
 import 'package:mycsf_app_client/webview_services/brsclaims.dart';
@@ -18,6 +19,7 @@ class _BrsViewState extends State<BrsView> {
 
   @override
   void initState() {
+    AppMetrica.reportEvent('BRS Page opened');
     super.initState();
     // Auth.getCurrentRole().then((value) {
     //   if (value == Role.unauthorized) {

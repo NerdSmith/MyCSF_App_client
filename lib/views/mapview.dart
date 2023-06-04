@@ -1,3 +1,4 @@
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:mycsf_app_client/api/map.dart';
 
@@ -28,6 +29,7 @@ class _MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('Map Page opened');
     MapController.getRuBuildings().then((value) {
       setState(() {
         _buildingsRu = value;

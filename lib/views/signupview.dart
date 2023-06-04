@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +33,7 @@ class _SignUpViewState extends State<SignUpView>
   @override
   void initState() {
     super.initState();
+    AppMetrica.reportEvent('SignUp Page opened');
     _user = Student();
     CourseGroup.fetchAll()
         .then((data) => setState(() {
