@@ -1,11 +1,21 @@
 import 'package:appmetrica_plugin/appmetrica_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intro_screen_onboarding_flutter/introduction.dart';
+import 'package:intro_screen_onboarding_flutter/introscreenonboarding.dart';
 import 'package:mycsf_app_client/home.dart';
+import 'package:mycsf_app_client/onboardings/introduction.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // await prefs.setBool('isIntroShown', false);
+  bool isIntroShown = prefs.getBool('isIntroShown') ?? false;
+
+  runApp(MyApp(isIntroShown: isIntroShown));
   _initAppMetrica();
 }
 
@@ -15,27 +25,91 @@ Future<void> _initAppMetrica() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isIntroShown;
+
+  const MyApp({Key? key, required this.isIntroShown}) : super(key: key);
+
+  _setIsShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isIntroShown', true);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        SfGlobalLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en'),
-        const Locale('ru'),
-      ],
-      title: 'My SCF',
-      theme: _createTheme(),
-      home: const Home()
+    if (isIntroShown) {
+      return MaterialApp(
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            SfGlobalLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'),
+            const Locale('ru'),
+          ],
+          title: 'My SCF',
+          theme: _createTheme(),
+          home: Home()
+      );
+    }
+    else {
+      _setIsShown();
+      return MaterialApp(
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            SfGlobalLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'),
+            const Locale('ru'),
+          ],
+          title: 'My SCF',
+          theme: _createTheme(),
+          home: HomeGateway()
+      );
+    }
+  }
+}
+
+class HomeGateway extends StatelessWidget {
+  HomeGateway({Key? key}) : super(key: key);
+  final List<MyIntroduction> list = [
+    MyIntroduction(
+      imageUrl: 'assets/onboardings/onboarding1.png',
+    ),
+    MyIntroduction(
+      imageUrl: 'assets/onboardings/onboarding2.png',
+    ),
+    MyIntroduction(
+      imageUrl: 'assets/onboardings/onboarding3.png',
+    ),
+    MyIntroduction(
+      imageUrl: 'assets/onboardings/onboarding4.png',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return IntroScreenOnboarding(
+      introductionList: list,
+      backgroudColor: Colors.white,
+      foregroundColor: Colors.black,
+      skipTextStyle: TextStyle(color: Colors.black, fontSize: 20),
+      onTapSkipButton: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ), //MaterialPageRoute
+        );
+      },
     );
   }
 }
+
 
 ThemeData _createTheme() {
   return ThemeData(

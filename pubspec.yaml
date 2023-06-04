@@ -53,6 +53,7 @@ dependencies:
   cached_network_image: ^3.1.0
   appmetrica_plugin: ^1.1.0
   web_socket_channel: ^2.4.0
+  intro_screen_onboarding_flutter: ^1.0.0
 
   flutter_localizations:
     sdk: flutter
@@ -123,6 +124,7 @@ flutter:
     - assets/menu_items/bottom/selected/
     - assets/map/
     - assets/map/NO_IMAGE.png
+    - assets/onboardings/
   fonts:
     - family: Montserrat
       fonts:

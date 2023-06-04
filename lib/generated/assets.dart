@@ -4,7 +4,6 @@ class Assets {
 
   static const String assetsBrains = 'assets/brains.png';
   static const String assetsDartanyan = 'assets/dartanyan.png';
-  static const String assetsExample = 'assets/example.png';
   static const String assetsLogo = 'assets/logo.png';
   static const String assetsMapNOIMAGE = 'assets/map/NO_IMAGE.png';
   static const String assetsMyCsfLogo = 'assets/my_csf_logo.png';
@@ -27,6 +26,10 @@ class Assets {
   static const String menuItemsSchedule = 'assets/menu_items/Schedule.png';
   static const String menuItemsSettings = 'assets/menu_items/Settings.png';
   static const String menuItemsSignup = 'assets/menu_items/Signup.png';
+  static const String onboardingsOnboarding1 = 'assets/onboardings/onboarding1.png';
+  static const String onboardingsOnboarding2 = 'assets/onboardings/onboarding2.png';
+  static const String onboardingsOnboarding3 = 'assets/onboardings/onboarding3.png';
+  static const String onboardingsOnboarding4 = 'assets/onboardings/onboarding4.png';
   static const String selectedAI = 'assets/menu_items/bottom/selected/AI.png';
   static const String selectedCalendar = 'assets/menu_items/bottom/selected/calendar.png';
   static const String selectedChat = 'assets/menu_items/bottom/selected/chat.png';
