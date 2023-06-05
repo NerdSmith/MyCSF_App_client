@@ -15,9 +15,9 @@
         </intent>
     </queries>
     <application
-        android:label="mycsf_app_client"
+        android:label="My CSF"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/mycsf_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

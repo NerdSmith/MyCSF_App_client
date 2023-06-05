@@ -13,6 +13,7 @@ class Assets {
   static const String bottomChat = 'assets/menu_items/bottom/chat.png';
   static const String bottomHome = 'assets/menu_items/bottom/home.png';
   static const String bottomMap = 'assets/menu_items/bottom/map.png';
+  static const String iconIcon = 'assets/icon/icon.png';
   static const String mapLayerSelect = 'assets/map/layer_select.png';
   static const String mapNOIMAGE = 'assets/map/NO_IMAGE.png';
   static const String menuItemsAI = 'assets/menu_items/AI.png';
